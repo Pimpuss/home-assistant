@@ -1,0 +1,1207 @@
+title: Maison
+badges:
+  - type: entity
+    show_name: true
+    show_state: true
+    show_icon: true
+    entity: light.prise_buanderie_cumulus
+    color: orange
+    state_content: last_changed
+    icon: mdi:power-socket-au
+    name: Cumulus
+  - type: entity
+    show_name: true
+    show_state: true
+    show_icon: true
+    entity: light.vmc
+    color: ''
+    state_content: last_changed
+    icon: mdi:fan
+  - type: custom:mushroom-chips-card
+    alignment: center
+    chips:
+      - type: template
+        icon: mdi:trash-can
+        icon_color: yellow
+        content: '{{ states.sensor.poubelle_jaune.state }}'
+        entity: calendar.poubelle_jaune
+        card_mod:
+          style: |
+            ha-card {
+              {% set state = states.sensor.poubelle_jaune.state %}
+              {% if state == 'Demain' %}
+                --chip-background: #AD6700;  # Orange clair
+                --text-color: black;
+              {% elif state == 'Aujourd\'hui' %}
+                --chip-background: #F1473B;  # Rouge
+                --text-color: white;
+              {% else %}
+                --chip-background: var(--card-background-color, white);  # Fond par défaut
+                --text-color: white;  # Texte en blanc
+              {% endif %}
+            }
+        tap_action: null
+  - type: custom:mushroom-chips-card
+    alignment: center
+    chips:
+      - type: template
+        icon: mdi:trash-can
+        icon_color: grey
+        content: '{{ states.sensor.poubelle_grise.state }}'
+        entity: calendar.poubelle_grise
+        card_mod:
+          style: |
+            ha-card {
+              {% set state = states.sensor.poubelle_grise.state %}
+              {% if state == 'Demain' %}
+                --chip-background: #ad6700;  # Orange clair
+                --text-color: black;
+              {% elif state == 'Aujourd\'hui' %}
+                --chip-background: #F1473B;  # Rouge
+                --text-color: white;
+              {% else %}
+                --chip-background: var(--card-background-color, white);  # Fond par défaut
+                --text-color: white;  # Texte en blanc
+              {% endif %}
+            }
+        tap_action: null
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: entity
+        entity: todo.maison
+        content_info: state
+        tap_action:
+          action: navigate
+          navigation_path: /todo
+        icon_color: green
+    visibility:
+      - condition: state
+        entity: todo.maison
+        state: '0'
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: entity
+        entity: todo.maison
+        content_info: state
+        tap_action:
+          action: navigate
+          navigation_path: /todo
+        icon_color: red
+    visibility:
+      - condition: state
+        entity: todo.maison
+        state: '1'
+  - type: entity
+    show_name: false
+    show_state: true
+    show_icon: true
+    entity: sensor.nombre_de_lumieres
+    color: amber
+    icon: mdi:lightbulb-alert
+    state_content: state
+type: sections
+max_columns: 2
+sections:
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: button
+            button_type: state
+            entity: weather.bauvin
+            tap_action:
+              action: navigate
+              navigation_path: '#meteo'
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            sub_button:
+              - entity: weather.bauvin
+                state_background: false
+                show_state: false
+                show_attribute: true
+                attribute: temperature
+                show_background: true
+                show_icon: true
+                icon: mdi:thermometer
+                name: Température Générale
+                show_last_changed: false
+              - entity: sensor.bauvin_humidity
+                show_background: true
+                show_name: false
+                show_last_changed: false
+                show_attribute: false
+                show_icon: true
+                show_state: true
+                name: Humidité
+                state_background: false
+              - entity: sensor.bauvin_freeze_chance
+                state_background: false
+                show_background: true
+                show_state: true
+                show_name: false
+                name: Risque Gel
+                icon: mdi:snowflake-thermometer
+              - entity: sensor.bauvin_cloud_cover
+                show_state: true
+                show_icon: true
+                state_background: false
+                show_name: false
+                show_background: true
+                show_last_changed: false
+                name: Etat Nuage
+            name: ''
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: true
+            show_name: true
+            card_layout: large-2-rows
+            icon: ''
+            force_icon: true
+            styles: |-
+              .bubble-button-card-container {
+                border-radius: 20px !important;
+                margin-top: 20px
+              }
+
+              .bubble-icon {
+                opacity: 1;
+                color: white !important;
+              }
+
+              .bubble-icon ha-icon {
+                display: none;
+              }
+
+              .bubble-icon {
+                width: 50px;  /* Ajuste la taille selon tes besoins */
+                height: 50px; /* Ajuste la taille selon tes besoins */
+                background: ${state === 'rainy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/rainy-5.svg')" : state === 'cloudy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/cloudy.svg')" : state === 'clear' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/day.svg')" : state === 'clear-night' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/night.svg')" : state === 'fog' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/fog.svg')" : state === 'hail' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/rainy-7.svg')" : state === 'lightning' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/thunder.svg')" : state === 'lightning-rainy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/lightning-rainy.svg')" : state === 'partlycloudy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/cloudy-day-3.svg')" : state === 'pouring' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/rainy-6.svg')" : state === 'snowy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/snowy-6.svg')" : state === 'snowy-rainy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/snowy-rainy.svg')" : state === 'sunny' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/day.svg')" : state === 'windy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/windy.svg')" : state === 'windy-variant' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/windy.svg')" : state === 'exceptionnal' ? "red" : '' } no-repeat center center;
+                background-size: contain;
+              }
+
+              ${icon.setAttribute("icon", "")}
+            button_action:
+              tap_action:
+                action: navigate
+                navigation_path: '#meteo'
+        columns: 1
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#meteo'
+            show_header: true
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 7px
+            width_desktop: 540px
+          - type: custom:meteofrance-weather-card
+            entity: weather.bauvin
+            name: Bauvin
+            hourly_forecast: false
+            rainChanceEntity: sensor.monthyon_rain_chance
+            uvEntity: sensor.monthyon_uv
+            cloudCoverEntity: sensor.monthyon_cloud_cover
+            freezeChanceEntity: sensor.monthyon_freeze_chance
+            snowChanceEntity: sensor.monthyon_snow_chance
+            rainForecastEntity: sensor.monthyon_next_rain
+            alertEntity: sensor.77_weather_alert
+            detailEntity: sensor.monthyon_rain_chance
+            wind_forecast_icons: false
+            humidity_forecast: true
+            details: true
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            name: 📍 Entrée
+            card_mod:
+              style: |
+                .bubble-separator.separator-container {
+                  margin-top: 20px;
+                  margin-bottom: 20px;
+                  
+                }
+            sub_button:
+              - entity: light.hall_escalier
+                name: Hall-Escalier
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+          - type: heading
+            icon: ''
+            heading_style: title
+            heading: 🚪 Porte d'entrée
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.porte_d_entree
+                color: state
+                icon: ''
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.porte_d_entree_batterie
+                color: state
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.spot_1_porte_entree
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Spot1
+                show_name: true
+                icon: mdi:lightbulb-spot
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_state: false
+                show_attribute: true
+                show_last_changed: false
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading: 🏠 Hall d'entrée
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.hall_d_entree
+                color: state
+                icon: ''
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.hall_d_entree_dressing_batterie
+                color: state
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.hue_tap_dial_hall_d_entree_batterie
+                color: state
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.hall_d_entree
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Plafonnier
+                show_name: true
+                icon: mdi:light-recessed
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                entity: light.plafonnier_hall_d_entree
+                show_background: true
+              - entity: light.ruban_hall_d_entree
+                name: Ruban
+                show_name: true
+                icon: mdi:led-strip-variant
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading: ↗️  Escaliers
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.escalier
+                color: state
+                icon: ''
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.escalier
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Spot1
+                show_name: true
+                icon: mdi:lightbulb-spot
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_background: true
+                entity: light.spot_escalier_1
+              - entity: light.spot_escalier_2
+                name: Spot2
+                show_name: true
+                icon: mdi:lightbulb-spot
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading_style: title
+            heading: 🚽  Toilettes
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.toilettes
+                color: state
+                icon: ''
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.toilettes_batterie
+                color: state
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.plafonnier_toilettes
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Applique
+                show_name: true
+                icon: mdi:light-flood-down
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_background: true
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+        columns: 1
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            name: 📍 RDC
+            card_mod:
+              style: |
+                .bubble-separator.separator-container {
+                  margin-top: 20px;
+                  margin-bottom: 20px;
+                  
+                }
+            sub_button:
+              - entity: light.sejour
+                show_name: true
+                show_state: false
+                show_last_changed: false
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                name: Salon-Cuisine
+          - type: heading
+            icon: ''
+            heading: 🖥️ Bureau Pimpus
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.bureau_pimpus
+                color: state
+                icon: mdi:led-strip-variant
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.lightstrip_bureau
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Ruban
+                show_name: true
+                icon: mdi:led-strip-variant
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_background: true
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            icon: mdi:power
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading: 🛋️ Salon
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.salon
+                color: state
+                icon: ''
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.salon_entree_batterie
+                color: state
+          - type: custom:bubble-card
+            card_type: media-player
+            entity: media_player.tv_salon_2
+            show_icon: true
+            show_name: true
+            scrolling_effect: true
+            hide:
+              play_pause_button: false
+            tap_action:
+              action: toggle
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            cover_background: true
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.salon
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - entity: light.hue_centris_ceiling_1
+                name: ''
+                show_name: true
+                icon: mdi:light-recessed
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_centris_spot_1
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_name: true
+                name: S1
+              - entity: light.hue_centris_spot_2
+                name: S2
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_centris_spot_3
+                name: S3
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_centris_spot_4
+                name: S4
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            icon: mdi:power
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Ruban
+                show_name: true
+                icon: mdi:led-strip-variant
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_background: true
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            icon: mdi:power
+            entity: light.sofa
+            styles: ''
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading: 🍽️ Cuisine
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.cuisine
+                color: state
+                icon: ''
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.cuisine_entee_salle_a_manger_batterie
+                color: state
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.cuisine_entee_salle_a_manger_batterie
+                color: state
+          - type: custom:bubble-card
+            card_type: media-player
+            entity: media_player.cuisine
+            show_icon: true
+            show_name: true
+            scrolling_effect: true
+            hide:
+              play_pause_button: false
+            tap_action:
+              action: toggle
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            cover_background: true
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.cuisine
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - entity: light.cuisine_spot_1
+                name: S1
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.cuisine_spot_2
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_name: true
+                name: S2
+              - entity: light.cuisine_spot_3
+                name: S3
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.cuisine_spot_4
+                name: S4
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            icon: mdi:power
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading: 🛁 Salle de bain enfants
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.salle_de_bain_enfants
+                color: state
+                icon: ''
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.salle_de_bain_enfants_batterie
+                color: state
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.salle_de_bain_enfants
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - entity: light.hue_color_spot_sdb_1
+                name: S1
+                show_name: true
+                icon: mdi:lightbulb-spot
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_color_spot_sdb_2
+                icon: mdi:lightbulb-spot
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_name: true
+                name: S2
+              - entity: light.hue_color_spot_sdb_3
+                name: S3
+                show_name: true
+                icon: mdi:lightbulb-spot
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_color_spot_sdb_4
+                name: S4
+                show_name: true
+                icon: mdi:lightbulb-spot
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            icon: mdi:power
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: entity
+                entity: scene.salle_de_bain_enfants_bain_mougnoute
+                icon_color: indigo
+                tap_action:
+                  action: toggle
+                icon: mdi:palette
+                content_info: name
+                name: Bain Manel 👧
+                use_entity_picture: false
+              - type: entity
+                entity: scene.salle_de_bain_enfants_detente
+                content_info: name
+                name: Détente
+                icon_color: orange
+                tap_action:
+                  action: toggle
+        columns: 1
+    column_span: 1
+  - type: grid
+    cards:
+      - type: custom:bubble-card
+        card_type: separator
+        name: 📍 Étage
+        card_mod:
+          style: |
+            .bubble-separator.separator-container {
+              margin-top: 20px;
+              margin-bottom: 20px;
+              
+            }
+        sub_button: []
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading: 🪑 Palier
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.palier_etage
+                color: state
+                icon: ''
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.hue_tap_dial_palier_etage_batterie
+                color: state
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Spot1
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                entity: light.spot_palier_1
+              - icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_name: true
+                name: Spot2
+                entity: light.spot_palier_2
+              - name: Spot3
+                icon: mdi:track-light
+                entity: light.spot_palier_3
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            entity: light.palier_etage
+            icon: mdi:power
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading: 🛌🏼 Chambre adultes
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.chambre_adultes
+                color: state
+                icon: ''
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.chambre_adulte_entee_batterie
+                color: state
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.chambre_adulte_lit_batterie
+                color: state
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.chambre_adultes
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Plafonnier
+                show_name: true
+                icon: mdi:light-recessed
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_background: true
+                entity: light.plafonnier_chambre_adultes
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            icon: mdi:power
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading: 🚿  Salle de bain adultes
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: light.salle_de_bain_adultes
+                color: state
+                icon: mdi:lightbulb-spot
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.salle_de_bain_adultes_batterie
+                color: state
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Douche
+                show_name: true
+                icon: mdi:lightbulb-spot
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                entity: light.spot_douche_sdb_adultes
+              - name: Vasque
+                show_name: true
+                icon: mdi:lightbulb-spot
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                entity: light.spot_vasque_sdb_adulte
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            entity: light.salle_de_bain_adultes
+            icon: mdi:power
+          - type: custom:bubble-card
+            card_type: separator
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading: 😽  Chambre Lina
+            heading_style: title
+            badges:
+              - type: entity
+                entity: light.chambre_de_lina
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.chevet_lina_batterie
+                color: state
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.chambre_lina_entree_batterie
+                color: state
+          - type: custom:bubble-card
+            card_type: media-player
+            entity: media_player.hub_lina
+            show_icon: true
+            show_name: true
+            scrolling_effect: true
+            hide:
+              play_pause_button: false
+            tap_action:
+              action: toggle
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            cover_background: true
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Plafonnier
+                show_name: true
+                icon: mdi:ceiling-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                entity: light.plafonnier_lina
+              - entity: light.lit_lina
+                name: Lit
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.lampe_de_chevet_lina
+                show_name: true
+                name: Chevet
+                icon: mdi:floor-lamp
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            entity: light.chambre_de_lina
+            icon: mdi:power
+        columns: 1
+      - square: false
+        type: grid
+        card_mod:
+          style: |
+            ha-card {
+              margin-bottom: 40px;
+            }
+        cards:
+          - square: false
+            type: grid
+            cards:
+              - type: heading
+                icon: ''
+                heading: 🧸  Chambre Manel
+                heading_style: title
+                badges:
+                  - type: entity
+                    entity: light.chambre_manel
+            columns: 1
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: light.prise_chevet_manel
+                icon: mdi:floor-lamp
+                name: Chevet
+                tap_action:
+                  action: toggle
+                icon_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            columns: 2
+        columns: 1
+  - type: grid
+    cards: []
+icon: mdi:home
+cards: []

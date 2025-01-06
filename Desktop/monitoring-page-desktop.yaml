@@ -1,0 +1,728 @@
+type: sections
+max_columns: 4
+title: Monitoring
+path: monitoring
+icon: mdi:monitor-dashboard
+sections:
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:router-network-wireless
+            name: Freebox
+            sub_button: []
+            card_layout: normal
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: entity
+                    entity: binary_sensor.freebox_server_etat_du_reseau_etendu_wan
+                    icon_color: green
+                    content_info: state
+                  - type: entity
+                    entity: sensor.freebox_upload_speed
+                  - type: entity
+                    entity: sensor.freebox_download_speed
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.disque1_free_space
+                primary_info: state
+                secondary_info: name
+                name: Espace Libre Disque 1
+                icon: mdi:harddisk
+                icon_color: '#B33771'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.freebox_disque_dur_1
+                primary_info: state
+                secondary_info: name
+                name: Température Disque 1
+                icon: mdi:thermometer
+                icon_color: '#EB4D4B'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.freebox_disque_dur_1
+                    color: '#EB4D4B'
+                hours_to_show: 8
+                points_per_hour: 20
+                line_width: 1
+                animate: true
+                show:
+                  name: false
+                  icon: false
+                  state: false
+                  legend: false
+                  fill: fade
+                card_mod:
+                  style: |
+                    ha-card {
+                      position: absolute !important;
+                      height: 100%;
+                      width: 80%;
+                      right: 0px;
+                      bottom: 0px;
+                      --ha-card-border-width: 0;
+                    }
+                    ha-card:after {
+                      content: "";
+                      position: absolute;
+                      width: 100%;
+                      height: 100%;
+                      background: linear-gradient(to right, var(--card-background-color), transparent);
+                      --ha-card-border-width: 0;
+                    }
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.disque2_free_space
+                primary_info: state
+                secondary_info: name
+                name: Espace Libre Disque 2
+                icon: mdi:harddisk
+                icon_color: '#B33771'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.freebox_disque_dur_2
+                primary_info: state
+                secondary_info: name
+                name: Température Disque 2
+                icon: mdi:thermometer
+                icon_color: '#EB4D4B'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.freebox_disque_dur_2
+                    color: '#EB4D4B'
+                hours_to_show: 8
+                points_per_hour: 20
+                line_width: 1
+                animate: true
+                show:
+                  name: false
+                  icon: false
+                  state: false
+                  legend: false
+                  fill: fade
+                card_mod:
+                  style: |
+                    ha-card {
+                      position: absolute !important;
+                      height: 100%;
+                      width: 80%;
+                      right: 0px;
+                      bottom: 0px;
+                      --ha-card-border-width: 0;
+                    }
+                    ha-card:after {
+                      content: "";
+                      position: absolute;
+                      width: 100%;
+                      height: 100%;
+                      background: linear-gradient(to right, var(--card-background-color), transparent);
+                      --ha-card-border-width: 0;
+                    }
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.disque3_free_space
+                primary_info: state
+                secondary_info: name
+                name: Espace Libre Disque 3
+                icon: mdi:harddisk
+                icon_color: '#B33771'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.freebox_disque_dur_3
+                primary_info: state
+                secondary_info: name
+                name: Température Disque 3
+                icon: mdi:thermometer
+                icon_color: '#EB4D4B'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.freebox_disque_dur_3
+                    color: '#EB4D4B'
+                hours_to_show: 8
+                points_per_hour: 20
+                line_width: 1
+                animate: true
+                show:
+                  name: false
+                  icon: false
+                  state: false
+                  legend: false
+                  fill: fade
+                card_mod:
+                  style: |
+                    ha-card {
+                      position: absolute !important;
+                      height: 100%;
+                      width: 80%;
+                      right: 0px;
+                      bottom: 0px;
+                      --ha-card-border-width: 0;
+                    }
+                    ha-card:after {
+                      content: "";
+                      position: absolute;
+                      width: 100%;
+                      height: 100%;
+                      background: linear-gradient(to right, var(--card-background-color), transparent);
+                      --ha-card-border-width: 0;
+                    }
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.disque4_free_space
+                primary_info: state
+                secondary_info: name
+                name: Espace Libre Disque 4
+                icon: mdi:harddisk
+                icon_color: '#B33771'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.freebox_disque_dur_4
+                primary_info: state
+                secondary_info: name
+                name: Température Disque 4
+                icon: mdi:thermometer
+                icon_color: '#EB4D4B'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.freebox_disque_dur_4
+                    color: '#EB4D4B'
+                hours_to_show: 8
+                points_per_hour: 20
+                line_width: 1
+                animate: true
+                show:
+                  name: false
+                  icon: false
+                  state: false
+                  legend: false
+                  fill: fade
+                card_mod:
+                  style: |
+                    ha-card {
+                      position: absolute !important;
+                      height: 100%;
+                      width: 80%;
+                      right: 0px;
+                      bottom: 0px;
+                      --ha-card-border-width: 0;
+                    }
+                    ha-card:after {
+                      content: "";
+                      position: absolute;
+                      width: 100%;
+                      height: 100%;
+                      background: linear-gradient(to right, var(--card-background-color), transparent);
+                      --ha-card-border-width: 0;
+                    }
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.ddexterne_1_free_space
+                primary_info: state
+                secondary_info: name
+                name: Espace Libre Disque Externe
+                icon: mdi:harddisk
+                icon_color: '#B33771'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.freebox_disque_dur_1
+                primary_info: state
+                secondary_info: name
+                name: Température Disque Externe
+                icon: mdi:thermometer
+                icon_color: '#EB4D4B'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.freebox_disque_dur_1
+                    color: '#EB4D4B'
+                hours_to_show: 8
+                points_per_hour: 20
+                line_width: 1
+                animate: true
+                show:
+                  name: false
+                  icon: false
+                  state: false
+                  legend: false
+                  fill: fade
+                card_mod:
+                  style: |
+                    ha-card {
+                      position: absolute !important;
+                      height: 100%;
+                      width: 80%;
+                      right: 0px;
+                      bottom: 0px;
+                      --ha-card-border-width: 0;
+                    }
+                    ha-card:after {
+                      content: "";
+                      position: absolute;
+                      width: 100%;
+                      height: 100%;
+                      background: linear-gradient(to right, var(--card-background-color), transparent);
+                      --ha-card-border-width: 0;
+                    }
+        columns: 2
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:server
+            name: Proxmox
+            sub_button: []
+            card_layout: normal
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: entity
+                entity: binary_sensor.node_proxmox_status
+                icon_color: green
+                name: NURyzen 5 PRO
+                content_info: state
+              - type: entity
+                entity: sensor.node_proxmox_last_boot
+                icon_color: deep-purple
+                icon: mdi:calendar-clock
+              - type: entity
+                entity: update.proxmox_ve_update
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.node_proxmox_virtual_machines_running
+            icon_color: purple
+            name: VM Actives
+            primary_info: state
+            secondary_info: name
+            card_mod:
+              style: |
+                ha-card {
+                --ha-card-border-width: 0;
+                  }
+          - type: custom:mushroom-entity-card
+            entity: sensor.node_proxmox_containers_running
+            icon_color: accent
+            name: LXC Actifs
+            primary_info: state
+            secondary_info: name
+            card_mod:
+              style: |
+                ha-card {
+                --ha-card-border-width: 0;
+                  }
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.node_proxmox_cpu_used
+                    primary_info: state
+                    secondary_info: name
+                    name: Charge Processeur (4 Core)
+                    icon: mdi:chip
+                    icon_color: '#ED4C67'
+                    card_mod:
+                      style: |
+                        ha-card {
+                          z-index: 1;
+                          --ha-card-border-width: 0;
+                        }
+                  - type: custom:mini-graph-card
+                    entities:
+                      - entity: sensor.node_proxmox_cpu_used
+                        color: '#ED4C67'
+                    hours_to_show: 8
+                    points_per_hour: 20
+                    line_width: 1
+                    animate: true
+                    show:
+                      name: false
+                      icon: false
+                      state: false
+                      legend: false
+                      fill: fade
+                    card_mod:
+                      style: |
+                        ha-card {
+                          position: absolute !important;
+                          height: 100%;
+                          width: 80%;
+                          right: 0px;
+                          bottom: 0px;
+                          --ha-card-border-width: 0;
+                        }
+                        ha-card:after {
+                          content: "";
+                          position: absolute;
+                          width: 100%;
+                          height: 100%;
+                          background: linear-gradient(to right, var(--card-background-color), transparent);
+                          --ha-card-border-width: 0;
+                        }
+          - type: vertical-stack
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.node_proxmox_memory_used_percentage
+                    primary_info: state
+                    secondary_info: name
+                    name: Charge RAM (16 Gio)
+                    icon: mdi:chip
+                    icon_color: '#badc58'
+                    card_mod:
+                      style: |
+                        ha-card {
+                          z-index: 1;
+                          --ha-card-border-width: 0;
+                        }
+                  - type: custom:mini-graph-card
+                    entities:
+                      - entity: sensor.node_proxmox_memory_used_percentage
+                        color: '#badc58'
+                    hours_to_show: 8
+                    points_per_hour: 20
+                    line_width: 1
+                    animate: true
+                    show:
+                      name: false
+                      icon: false
+                      state: false
+                      legend: false
+                      fill: fade
+                    card_mod:
+                      style: |
+                        ha-card {
+                          position: absolute !important;
+                          height: 100%;
+                          width: 80%;
+                          right: 0px;
+                          bottom: 0px;
+                          --ha-card-border-width: 0;
+                        }
+                        ha-card:after {
+                          content: "";
+                          position: absolute;
+                          width: 100%;
+                          height: 100%;
+                          background: linear-gradient(to right, var(--card-background-color), transparent);
+                          --ha-card-border-width: 0;
+                        }
+        columns: 2
+      - type: custom:stack-in-card
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.node_proxmox_disk_used_percentage
+            primary_info: state
+            secondary_info: name
+            name: Espace Libre Disque
+            icon: mdi:harddisk
+            icon_color: '#B33771'
+            card_mod:
+              style: |
+                ha-card {
+                  z-index: 1;
+                  --ha-card-border-width: 0;
+                }
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:home-assistant
+            name: Home Assistant
+            sub_button: []
+            card_layout: normal
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: entity
+                entity: binary_sensor.qemu_haos14_1_100_status
+                icon_color: green
+                content_info: state
+              - type: entity
+                entity: sensor.qemu_haos14_1_100_last_boot
+                icon_color: deep-purple
+                icon: mdi:calendar-clock
+              - type: entity
+                entity: sensor.qemu_haos14_1_100_node
+                icon_color: deep-orange
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.qemu_haos14_1_100_cpu_used
+                    primary_info: state
+                    secondary_info: name
+                    name: Charge Processeur (2 Core)
+                    icon: mdi:chip
+                    icon_color: '#ED4C67'
+                    card_mod:
+                      style: |
+                        ha-card {
+                          z-index: 1;
+                          --ha-card-border-width: 0;
+                        }
+                  - type: custom:mini-graph-card
+                    entities:
+                      - entity: sensor.qemu_haos14_1_100_cpu_used
+                        color: '#ED4C67'
+                    hours_to_show: 8
+                    points_per_hour: 20
+                    line_width: 1
+                    animate: true
+                    show:
+                      name: false
+                      icon: false
+                      state: false
+                      legend: false
+                      fill: fade
+                    card_mod:
+                      style: |
+                        ha-card {
+                          position: absolute !important;
+                          height: 100%;
+                          width: 80%;
+                          right: 0px;
+                          bottom: 0px;
+                          --ha-card-border-width: 0;
+                        }
+                        ha-card:after {
+                          content: "";
+                          position: absolute;
+                          width: 100%;
+                          height: 100%;
+                          background: linear-gradient(to right, var(--card-background-color), transparent);
+                          --ha-card-border-width: 0;
+                        }
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.qemu_haos14_1_100_memory_used_percentage
+                primary_info: state
+                secondary_info: name
+                name: Charge RAM (16 Gio)
+                icon: mdi:chip
+                icon_color: '#badc58'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.qemu_haos14_1_100_memory_used_percentage
+                    color: '#badc58'
+                hours_to_show: 8
+                points_per_hour: 20
+                line_width: 1
+                animate: true
+                show:
+                  name: false
+                  icon: false
+                  state: false
+                  legend: false
+                  fill: fade
+                card_mod:
+                  style: |
+                    ha-card {
+                      position: absolute !important;
+                      height: 100%;
+                      width: 80%;
+                      right: 0px;
+                      bottom: 0px;
+                      --ha-card-border-width: 0;
+                    }
+                    ha-card:after {
+                      content: "";
+                      position: absolute;
+                      width: 100%;
+                      height: 100%;
+                      background: linear-gradient(to right, var(--card-background-color), transparent);
+                      --ha-card-border-width: 0;
+                    }
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.qemu_haos14_1_100_disk_used_percentage
+                primary_info: state
+                secondary_info: name
+                name: Utilisation du disque
+                icon: mdi:harddisk
+                icon_color: '#B33771'
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.qemu_haos14_1_100_disk_used_percentage
+                    color: '#B33771'
+                hours_to_show: 8
+                points_per_hour: 20
+                line_width: 1
+                animate: true
+                show:
+                  name: false
+                  icon: false
+                  state: false
+                  legend: false
+                  fill: fade
+                card_mod:
+                  style: |
+                    ha-card {
+                      position: absolute !important;
+                      height: 100%;
+                      width: 80%;
+                      right: 0px;
+                      bottom: 0px;
+                      --ha-card-border-width: 0;
+                    }
+                    ha-card:after {
+                      content: "";
+                      position: absolute;
+                      width: 100%;
+                      height: 100%;
+                      background: linear-gradient(to right, var(--card-background-color), transparent);
+                      --ha-card-border-width: 0;
+                    }
+          - type: custom:stack-in-card
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: binary_sensor.qemu_haos14_1_100_health
+                primary_info: state
+                secondary_info: name
+                name: Santé du disque
+                icon: mdi:harddisk
+                icon_color: |
+                  [[[
+                    if (states['binary_sensor.qemu_haos14_1_100_health'].state === 'on') {
+                      return 'green';  # OK
+                    } else {
+                      return 'red';  # Pas OK
+                    }
+                  ]]]
+                card_mod:
+                  style: |
+                    ha-card {
+                      z-index: 1;
+                      --ha-card-border-width: 0;
+                    }
+        columns: 2
+badges: []
+cards: []
