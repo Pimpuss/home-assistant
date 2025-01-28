@@ -1,0 +1,760 @@
+# CARTE PRINCIPALE
+square: false
+type: grid
+cards:
+  - square: true
+    type: grid
+    cards:
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:power
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: power
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: #EB4436 !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:arrow-up-bold-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: up
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:menu
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: green
+        hold_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: vol_inc
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: #74B978 !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:arrow-left-bold-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: left
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:checkbox-blank-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: ok
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:arrow-right-bold-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: right
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:backup-restore
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: red
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: #AA1614 !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:arrow-down-bold-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: down
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:home-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: home
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: ##4B81BD !important;
+            }
+  - square: false
+    type: grid
+    cards:
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:skip-previous-circle-outline
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: bwd
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:play-pause
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: play
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:skip-next-circle-outline
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: fwd
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:volume-plus
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: vol_inc
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: #7D4FFE !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:volume-mute
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: mute
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:chevron-up-box
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: prgm_inc
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: #2a9d8f !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:volume-minus
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: vol_dec
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: #7D4FFE !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: fas:circle-info
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: info
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: #E7AB30 !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:chevron-down-box
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: prgm_dec
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: #2a9d8f !important;
+            }
+    columns: 3
+  - square: false
+    type: grid
+    cards:
+      - show_name: false
+        show_icon: true
+        type: picture
+        image: >-
+          https://www.keyweo.com/wp-content/uploads/2021/09/Diseno-sin-titulo-9.png
+        tap_action:
+          action: navigate
+          navigation_path: '#tv-salon'
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              display: flex;
+              justify-content: center; /* Pour centrer l'image */
+              align-items: center; /* Pour centrer verticalement si nécessaire */
+            }
+            ha-card img {
+              width: 90%; /* Applique la largeur à 40% */
+            }
+      - type: picture
+        image: https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png
+        show_name: false
+        show_icon: true
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: youtube
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              display: flex;
+              justify-content: center; /* Pour centrer l'image */
+              align-items: center; /* Pour centrer verticalement si nécessaire */
+            }
+            ha-card img {
+              width: 45%; /* Applique la largeur à 40% */
+            }
+      - show_name: false
+        show_icon: true
+        type: picture
+        image: >-
+          https://upload.wikimedia.org/wikipedia/commons/f/ff/Netflix-new-icon.png
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: netflix
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              display:flex;
+              justify-content: center;
+              align-items: center;
+            }
+            ha-card img {
+              width: 40% !important; 
+              height: auto; 
+              max-width: 200px; 
+              aspect-ratio: 1 / 1; 
+              border-radius: 50%; 
+              object-fit: cover; 
+            }
+  - square: false
+    type: grid
+    cards:
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:close
+        tap_action:
+          action: navigate
+          navigation_path: /test-mobile-2
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric
+        tap_action:
+          action: navigate
+          navigation_path: '#number'
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:television
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: tv
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+columns: 1
+# POP NUMBER
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    card_type: pop-up
+    hash: "#number"
+    show_header: false
+    name: ""
+    show_state: true
+    show_name: false
+    force_icon: false
+    margin: 0px
+    width_desktop: 540px
+    show_last_changed: true
+    show_attribute: false
+    hide_backdrop: true
+    card_layout: normal
+  - square: true
+    type: grid
+    cards:
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric-1-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: "1"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric-2-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: "2"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric-3-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: "3"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric-4-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: "4"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric-5-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: "5"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric-6-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: "6"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric-7-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: "7"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric-8-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: "8"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric-9-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: "9"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:backup-restore
+        tap_action:
+          action: navigate
+          navigation_path: "#freebox"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: mdi:numeric-0-circle
+        tap_action:
+          action: perform-action
+          perform_action: freebox_player.remote
+          target: {}
+          data:
+            code: "0"
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+      - show_name: false
+        show_icon: true
+        type: button
+        icon: ""
+        tap_action:
+          action: none
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --mdc-icon-button-size: 100%;
+            }
+            ha-state-icon {
+              color: white !important;
+            }
+
