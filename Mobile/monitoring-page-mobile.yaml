@@ -1,10 +1,60 @@
 type: sections
-max_columns: 4
+max_columns: 1
 title: Monitoring
 path: monitoring
+icon: mdi:monitor-dashboard
 sections:
   - type: grid
     cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:certificate-outline
+            name: Https certificat
+            sub_button: []
+            card_layout: normal
+            card_mod:
+              style: |
+                .bubble-separator.separator-container {
+                  margin-top: 20px;
+                }
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.pimpus_freeboxos_fr_expiration_du_certificat
+                vertical: false
+                hide_state: false
+                name: Expiration du certificat
+              - type: custom:mushroom-template-card
+                primary: 'Nombre de jour(s) restant :'
+                secondary: >-
+                  {{ states('sensor.nombre_de_jour_restant_certificat') }}
+                  jour(s)
+                icon: mdi:calendar
+                entity: sensor.nombre_de_jour_restant_certificat
+                icon_color: >
+                  {% set jours_restants =
+                  states('sensor.nombre_de_jour_restant_certificat') | float %}
+
+                  {% if jours_restants <= 10 %}
+                    red
+                  {% elif jours_restants <= 20 %}
+                    orange
+                  {% else %}
+                    green
+                  {% endif %}
+                multiline_secondary: false
+                tap_action:
+                  action: more-info
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+            columns: 2
+        columns: 1
       - square: false
         type: grid
         cards:
@@ -14,355 +64,342 @@ sections:
             name: Freebox
             sub_button: []
             card_layout: normal
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: entity
+                entity: binary_sensor.freebox_server_etat_du_reseau_etendu_wan
+                icon_color: green
+                content_info: state
+              - type: entity
+                entity: sensor.freebox_upload_speed
+              - type: entity
+                entity: sensor.freebox_download_speed
+            alignment: center
+        columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.disque1_free_space') }} %"
+            secondary: Disque 1
+            icon: mdi:harddisk
+            entity: sensor.disque1_free_space
+            icon_color: |2+
+                    {% set free_space = states('sensor.disque1_free_space') | float %}
+                {% if free_space < 10 %}
+                  red
+                {% elif free_space < 50 %}
+                  orange
+                {% else %}
+                  green
+                {% endif %}
+
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.disque2_free_space') }} %"
+            secondary: 'Disque 2 '
+            icon: mdi:harddisk
+            entity: sensor.disque2_free_space
+            icon_color: |2+
+                    {% set free_space = states('sensor.disque2_free_space') | float %}
+                {% if free_space < 10 %}
+                  red
+                {% elif free_space < 50 %}
+                  orange
+                {% else %}
+                  green
+                {% endif %}
+
+            multiline_secondary: false
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.disque3_free_space') }} %"
+            secondary: 'Disque 3 '
+            icon: mdi:harddisk
+            entity: sensor.disque3_free_space
+            icon_color: |2+
+                    {% set free_space = states('sensor.disque3_free_space') | float %}
+                {% if free_space < 10 %}
+                  red
+                {% elif free_space < 50 %}
+                  orange
+                {% else %}
+                  green
+                {% endif %}
+
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+        columns: 3
+      - square: false
+        type: grid
+        cards:
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.disque4_free_space') }} %"
+            secondary: Disque 4
+            icon: mdi:harddisk
+            entity: sensor.disque4_free_space
+            icon_color: |2+
+                    {% set free_space = states('sensor.disque4_free_space') | float %}
+                {% if free_space < 10 %}
+                  red
+                {% elif free_space < 50 %}
+                  orange
+                {% else %}
+                  green
+                {% endif %}
+
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.freebox_free_space_2') }} %"
+            secondary: Disque Externe
+            icon: mdi:harddisk
+            entity: sensor.freebox_free_space_2
+            icon_color: |2+
+                    {% set free_space = states('sensor.freebox_free_space_2') | float %}
+                {% if free_space < 10 %}
+                  red
+                {% elif free_space < 50 %}
+                  orange
+                {% else %}
+                  green
+                {% endif %}
+
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.freebox_temperature_1') }} °C"
+            secondary: Boxe Temp 1
+            icon: mdi:thermometer
+            entity: sensor.freebox_temperature_1
+            icon_color: |
+              {% set temp = states('sensor.freebox_temperature_1') | float %}
+              {% if temp <= 50 %}
+                green
+              {% elif temp <= 70 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.freebox_temperature_2')}} °C"
+            secondary: Boxe Temp 2
+            icon: mdi:thermometer
+            entity: sensor.freebox_temperature_2
+            icon_color: |
+              {% set temp = states('sensor.freebox_temperature_2') | float %}
+              {% if temp <= 50 %}
+                green
+              {% elif temp <= 70 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.freebox_temperature_3') }} °C"
+            secondary: Boxe Temp 3
+            icon: mdi:thermometer
+            entity: sensor.freebox_temperature_3
+            icon_color: |
+              {% set temp = states('sensor.freebox_temperature_3') | float %}
+              {% if temp <= 50 %}
+                green
+              {% elif temp <= 70 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+        columns: 3
+      - square: false
+        type: grid
+        cards:
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.freebox_temperature_cpu_ap') }} °C"
+            secondary: CPU AP
+            icon: mdi:thermometer
+            entity: sensor.freebox_temperature_cpu_ap
+            icon_color: >
+              {% set temp = states('sensor.freebox_temperature_cpu_ap') | float
+              %}
+
+              {% if temp <= 50 %}
+                green
+              {% elif temp <= 70 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.freebox_temperature_cpu_cp_master')}} °C"
+            secondary: CPU MASTER
+            icon: mdi:thermometer
+            entity: sensor.freebox_temperature_cpu_cp_master
+            icon_color: >
+              {% set temp = states('sensor.freebox_temperature_cpu_cp_master') |
+              float %}
+
+              {% if temp <= 50 %}
+                green
+              {% elif temp <= 70 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.freebox_temperature_cpu_cp_slave') }} °C"
+            secondary: CPU SLAVE
+            icon: mdi:thermometer
+            entity: sensor.freebox_temperature_cpu_cp_slave
+            icon_color: >
+              {% set temp = states('sensor.freebox_temperature_cpu_cp_slave') |
+              float %}
+
+              {% if temp <= 50 %}
+                green
+              {% elif temp <= 70 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+        columns: 3
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:printer
+            name: Imprimante HP
+            sub_button: []
+            card_layout: normal
             card_mod:
               style: |
                 .bubble-separator.separator-container {
                   margin-top: 20px;
                 }
-          - type: horizontal-stack
-            cards:
-              - type: custom:mushroom-chips-card
-                chips:
-                  - type: entity
-                    entity: binary_sensor.freebox_server_etat_du_reseau_etendu_wan
-                    icon_color: green
-                    content_info: state
-                  - type: entity
-                    entity: sensor.freebox_upload_speed
-                  - type: entity
-                    entity: sensor.freebox_download_speed
-                alignment: center
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: entity
+                entity: sensor.hp_envy_photo_6200_series
+              - type: entity
+                entity: sensor.hp_envy_photo_6200_series_black_ink
+                icon_color: black
+                name: Noir
+                content_info: state
+              - type: entity
+                entity: sensor.hp_envy_photo_6200_series_tri_color_ink
+                icon_color: white
+                content_info: state
+            alignment: center
         columns: 1
       - square: false
         type: grid
         cards:
-          - type: custom:stack-in-card
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.disque1_free_space
-                primary_info: state
-                secondary_info: name
-                name: Espace Libre Disque 1
-                icon: mdi:harddisk
-                icon_color: '#B33771'
-                card_mod:
-                  style: |
-                    ha-card {
-                      z-index: 1;
-                      --ha-card-border-width: 0;
-                    }
-          - type: custom:stack-in-card
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.freebox_disque_dur_1
-                primary_info: state
-                secondary_info: name
-                name: Température Disque 1
-                icon: mdi:thermometer
-                icon_color: '#EB4D4B'
-                card_mod:
-                  style: |
-                    ha-card {
-                      z-index: 1;
-                      --ha-card-border-width: 0;
-                    }
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.freebox_disque_dur_1
-                    color: '#EB4D4B'
-                hours_to_show: 8
-                points_per_hour: 20
-                line_width: 1
-                animate: true
-                show:
-                  name: false
-                  icon: false
-                  state: false
-                  legend: false
-                  fill: fade
-                card_mod:
-                  style: |
-                    ha-card {
-                      position: absolute !important;
-                      height: 100%;
-                      width: 80%;
-                      right: 0px;
-                      bottom: 0px;
-                      --ha-card-border-width: 0;
-                    }
-                    ha-card:after {
-                      content: "";
-                      position: absolute;
-                      width: 100%;
-                      height: 100%;
-                      background: linear-gradient(to right, var(--card-background-color), transparent);
-                      --ha-card-border-width: 0;
-                    }
-        columns: 2
-      - square: false
-        type: grid
-        cards:
-          - type: custom:stack-in-card
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.disque2_free_space
-                primary_info: state
-                secondary_info: name
-                name: Espace Libre Disque 2
-                icon: mdi:harddisk
-                icon_color: '#B33771'
-                card_mod:
-                  style: |
-                    ha-card {
-                      z-index: 1;
-                      --ha-card-border-width: 0;
-                    }
-          - type: custom:stack-in-card
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.freebox_disque_dur_2
-                primary_info: state
-                secondary_info: name
-                name: Température Disque 2
-                icon: mdi:thermometer
-                icon_color: '#EB4D4B'
-                card_mod:
-                  style: |
-                    ha-card {
-                      z-index: 1;
-                      --ha-card-border-width: 0;
-                    }
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.freebox_disque_dur_2
-                    color: '#EB4D4B'
-                hours_to_show: 8
-                points_per_hour: 20
-                line_width: 1
-                animate: true
-                show:
-                  name: false
-                  icon: false
-                  state: false
-                  legend: false
-                  fill: fade
-                card_mod:
-                  style: |
-                    ha-card {
-                      position: absolute !important;
-                      height: 100%;
-                      width: 80%;
-                      right: 0px;
-                      bottom: 0px;
-                      --ha-card-border-width: 0;
-                    }
-                    ha-card:after {
-                      content: "";
-                      position: absolute;
-                      width: 100%;
-                      height: 100%;
-                      background: linear-gradient(to right, var(--card-background-color), transparent);
-                      --ha-card-border-width: 0;
-                    }
-        columns: 2
-      - square: false
-        type: grid
-        cards:
-          - type: custom:stack-in-card
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.disque3_free_space
-                primary_info: state
-                secondary_info: name
-                name: Espace Libre Disque 3
-                icon: mdi:harddisk
-                icon_color: '#B33771'
-                card_mod:
-                  style: |
-                    ha-card {
-                      z-index: 1;
-                      --ha-card-border-width: 0;
-                    }
-          - type: custom:stack-in-card
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.freebox_disque_dur_3
-                primary_info: state
-                secondary_info: name
-                name: Température Disque 3
-                icon: mdi:thermometer
-                icon_color: '#EB4D4B'
-                card_mod:
-                  style: |
-                    ha-card {
-                      z-index: 1;
-                      --ha-card-border-width: 0;
-                    }
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.freebox_disque_dur_3
-                    color: '#EB4D4B'
-                hours_to_show: 8
-                points_per_hour: 20
-                line_width: 1
-                animate: true
-                show:
-                  name: false
-                  icon: false
-                  state: false
-                  legend: false
-                  fill: fade
-                card_mod:
-                  style: |
-                    ha-card {
-                      position: absolute !important;
-                      height: 100%;
-                      width: 80%;
-                      right: 0px;
-                      bottom: 0px;
-                      --ha-card-border-width: 0;
-                    }
-                    ha-card:after {
-                      content: "";
-                      position: absolute;
-                      width: 100%;
-                      height: 100%;
-                      background: linear-gradient(to right, var(--card-background-color), transparent);
-                      --ha-card-border-width: 0;
-                    }
-        columns: 2
-      - square: false
-        type: grid
-        cards:
-          - type: custom:stack-in-card
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.disque4_free_space
-                primary_info: state
-                secondary_info: name
-                name: Espace Libre Disque 4
-                icon: mdi:harddisk
-                icon_color: '#B33771'
-                card_mod:
-                  style: |
-                    ha-card {
-                      z-index: 1;
-                      --ha-card-border-width: 0;
-                    }
-          - type: custom:stack-in-card
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.freebox_disque_dur_4
-                primary_info: state
-                secondary_info: name
-                name: Température Disque 4
-                icon: mdi:thermometer
-                icon_color: '#EB4D4B'
-                card_mod:
-                  style: |
-                    ha-card {
-                      z-index: 1;
-                      --ha-card-border-width: 0;
-                    }
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.freebox_disque_dur_4
-                    color: '#EB4D4B'
-                hours_to_show: 8
-                points_per_hour: 20
-                line_width: 1
-                animate: true
-                show:
-                  name: false
-                  icon: false
-                  state: false
-                  legend: false
-                  fill: fade
-                card_mod:
-                  style: |
-                    ha-card {
-                      position: absolute !important;
-                      height: 100%;
-                      width: 80%;
-                      right: 0px;
-                      bottom: 0px;
-                      --ha-card-border-width: 0;
-                    }
-                    ha-card:after {
-                      content: "";
-                      position: absolute;
-                      width: 100%;
-                      height: 100%;
-                      background: linear-gradient(to right, var(--card-background-color), transparent);
-                      --ha-card-border-width: 0;
-                    }
-        columns: 2
-      - square: false
-        type: grid
-        cards:
-          - type: custom:stack-in-card
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.ddexterne_1_free_space
-                primary_info: state
-                secondary_info: name
-                name: Espace Libre Disque Externe
-                icon: mdi:harddisk
-                icon_color: '#B33771'
-                card_mod:
-                  style: |
-                    ha-card {
-                      z-index: 1;
-                      --ha-card-border-width: 0;
-                    }
-          - type: custom:stack-in-card
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.freebox_disque_dur_1
-                primary_info: state
-                secondary_info: name
-                name: Température Disque Externe
-                icon: mdi:thermometer
-                icon_color: '#EB4D4B'
-                card_mod:
-                  style: |
-                    ha-card {
-                      z-index: 1;
-                      --ha-card-border-width: 0;
-                    }
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.freebox_disque_dur_1
-                    color: '#EB4D4B'
-                hours_to_show: 8
-                points_per_hour: 20
-                line_width: 1
-                animate: true
-                show:
-                  name: false
-                  icon: false
-                  state: false
-                  legend: false
-                  fill: fade
-                card_mod:
-                  style: |
-                    ha-card {
-                      position: absolute !important;
-                      height: 100%;
-                      width: 80%;
-                      right: 0px;
-                      bottom: 0px;
-                      --ha-card-border-width: 0;
-                    }
-                    ha-card:after {
-                      content: "";
-                      position: absolute;
-                      width: 100%;
-                      height: 100%;
-                      background: linear-gradient(to right, var(--card-background-color), transparent);
-                      --ha-card-border-width: 0;
-                    }
-        columns: 2
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:zigbee
+            name: Zig2MQTT
+            sub_button:
+              - entity: button.zigbee2mqtt_bridge_restart
+                icon: mdi:restart-alert
+                show_last_changed: true
+                show_name: true
+                name: Restart
+                tap_action:
+                  action: toggle
+            card_layout: normal
+            card_mod:
+              style: |
+                .bubble-separator.separator-container {
+                  margin-top: 20px;
+                }
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: entity
+                entity: binary_sensor.zigbee2mqtt_bridge_connection_state
+                icon_color: green
+              - type: entity
+                entity: sensor.zigbee2mqtt_bridge_coordinator_version
+                icon_color: accent
+              - type: entity
+                entity: sensor.zigbee2mqtt_bridge_version
+                icon_color: red
+                icon: mdi:package
+              - type: entity
+                entity: switch.zigbee2mqtt_bridge_permit_join
+                tap_action:
+                  action: toggle
+                use_entity_picture: false
+                icon_color: light-green
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+                name: Apparaige
+                content_info: name
+            alignment: center
+        columns: 1
   - type: grid
     cards:
       - square: false
@@ -370,7 +407,7 @@ sections:
         cards:
           - type: custom:bubble-card
             card_type: separator
-            icon: mdi:server
+            icon: phu:proxmox
             name: Proxmox
             sub_button: []
             card_layout: normal
@@ -480,7 +517,7 @@ sections:
                     entity: sensor.node_proxmox_memory_used_percentage
                     primary_info: state
                     secondary_info: name
-                    name: Charge RAM (16 Gio)
+                    name: Charge RAM (8 Gio)
                     icon: mdi:chip
                     icon_color: '#badc58'
                     card_mod:
@@ -537,6 +574,144 @@ sections:
                   z-index: 1;
                   --ha-card-border-width: 0;
                 }
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:table-network
+            name: Tailscale
+            sub_button: []
+            card_layout: normal
+            card_mod:
+              style: |
+                .bubble-separator.separator-container {
+                  margin-top: 20px;
+                }
+          - type: custom:bubble-card
+            card_type: button
+            button_type: state
+            entity: sensor.plex_vu_pour_la_derniere_fois_2
+            name: Plex
+            icon: mdi:plex
+            show_last_changed: true
+            show_attribute: false
+            attribute: friendly_name
+            card_layout: large-2-rows
+            sub_button:
+              - entity: sensor.plex_adresse_ip_2
+                show_state: true
+                icon: mdi:ip
+                show_name: false
+                show_last_changed: false
+                show_attribute: false
+                attribute: friendly_name
+                tap_action:
+                  action: more-info
+              - entity: binary_sensor.plex_client_2
+                show_name: false
+                show_state: true
+            tap_action:
+              action: none
+            button_action:
+              tap_action:
+                action: url
+                url_path:
+          - type: custom:bubble-card
+            card_type: button
+            button_type: state
+            entity: sensor.pc_milhan_maison_vu_pour_la_derniere_fois
+            name: Pc Maison
+            icon: mdi:desktop-tower-monitor
+            show_last_changed: true
+            show_attribute: false
+            attribute: friendly_name
+            card_layout: large-2-rows
+            sub_button:
+              - entity: sensor.pc_milhan_maison_adresse_ip
+                show_state: true
+                icon: mdi:ip
+                show_name: false
+                show_last_changed: false
+                show_attribute: false
+                attribute: friendly_name
+                tap_action:
+                  action: more-info
+              - entity: binary_sensor.pc_milhan_maison_client
+                show_name: false
+                show_state: true
+                show_last_changed: false
+                show_attribute: false
+            tap_action:
+              action: none
+            button_action:
+              tap_action:
+                action: url
+                url_path:
+          - type: custom:bubble-card
+            card_type: button
+            button_type: state
+            entity: sensor.google_pixel_9_pro_xl_vu_pour_la_derniere_fois
+            name: Pixel 9Pro
+            icon: mdi:cellphone
+            show_last_changed: true
+            show_attribute: false
+            attribute: friendly_name
+            card_layout: large-2-rows
+            sub_button:
+              - show_state: true
+                icon: mdi:ip
+                show_name: false
+                show_last_changed: false
+                show_attribute: false
+                attribute: friendly_name
+                tap_action:
+                  action: more-info
+                entity: sensor.google_pixel_9_pro_xl_adresse_ip
+              - entity: binary_sensor.google_pixel_9_pro_xl_client
+                show_name: false
+                show_state: true
+                show_last_changed: false
+                show_attribute: false
+            tap_action:
+              action: none
+            button_action:
+              tap_action:
+                action: url
+                url_path:
+          - type: custom:bubble-card
+            card_type: button
+            button_type: state
+            entity: sensor.portable_pimpus_vu_pour_la_derniere_fois
+            name: Portable
+            icon: mdi:laptop
+            show_last_changed: true
+            show_attribute: false
+            attribute: friendly_name
+            card_layout: large-2-rows
+            sub_button:
+              - show_state: true
+                icon: mdi:ip
+                show_name: false
+                show_last_changed: false
+                show_attribute: false
+                attribute: friendly_name
+                tap_action:
+                  action: more-info
+                entity: sensor.portable_pimpus_adresse_ip
+              - entity: binary_sensor.portable_pimpus_client
+                show_name: false
+                show_state: true
+                show_last_changed: false
+                show_attribute: false
+                show_background: true
+            tap_action:
+              action: none
+            button_action:
+              tap_action:
+                action: url
+                url_path:
+        columns: 1
   - type: grid
     cards:
       - square: false
@@ -556,6 +731,8 @@ sections:
           - type: custom:mushroom-chips-card
             chips:
               - type: entity
+                entity: update.home_assistant_core_update
+              - type: entity
                 entity: binary_sensor.qemu_haos14_1_100_status
                 icon_color: green
                 content_info: state
@@ -563,9 +740,6 @@ sections:
                 entity: sensor.qemu_haos14_1_100_last_boot
                 icon_color: deep-purple
                 icon: mdi:calendar-clock
-              - type: entity
-                entity: sensor.qemu_haos14_1_100_node
-                icon_color: deep-orange
             alignment: center
         columns: 1
       - square: false
@@ -626,7 +800,7 @@ sections:
                 entity: sensor.qemu_haos14_1_100_memory_used_percentage
                 primary_info: state
                 secondary_info: name
-                name: Charge RAM (16 Gio)
+                name: Charge RAM (6 Gio)
                 icon: mdi:chip
                 icon_color: '#badc58'
                 card_mod:
@@ -741,14 +915,76 @@ sections:
                       --ha-card-border-width: 0;
                     }
         columns: 2
-icon: mdi:monitor-dashboard
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:plex
+            name: Plex
+            sub_button:
+              - entity: button.plex_maison_scanner_les_clients
+                name: Scan
+                show_name: true
+                icon: mdi:magnify
+                show_state: false
+                show_attribute: false
+                show_last_changed: true
+                tap_action:
+                  action: toggle
+            card_layout: normal
+            card_mod:
+              style: |
+                .bubble-separator.separator-container {
+                  margin-top: 20px;
+                }
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: entity
+                    entity: update.plex_media_server_plex_maison
+                  - type: entity
+                    entity: sensor.plex_maison
+                    icon: mdi:play
+                    icon_color: green
+                  - type: entity
+                    entity: sensor.plex_maison_library_films_adultes
+                    icon_color: blue
+                    content_info: state
+                  - type: entity
+                    entity: sensor.plex_maison_library_series_tv_adultes
+                    icon: ''
+                    icon_color: blue
+                  - type: entity
+                    entity: sensor.plex_maison_library_films_enfants
+                    icon_color: yellow
+                  - type: entity
+                    entity: sensor.plex_maison_library_series_tv_enfants
+                    icon_color: yellow
+          - type: media-control
+            name: Pc Pimpus
+            entity: media_player.plex_plex_for_windows_desktop_4sh86lu
+            visibility:
+              - condition: state
+                entity: media_player.plex_plex_for_windows_desktop_4sh86lu
+                state_not: unavailable
+          - type: media-control
+            name: Pixel Pimpus
+            entity: media_player.plex_plex_for_android_mobile_am60_series
+            visibility:
+              - condition: state
+                entity: media_player.plex_plex_for_android_mobile_am60_series
+                state_not: unavailable
+          - type: media-control
+            name: Tv Salon
+            entity: >-
+              media_player.plex_lina_manel_plex_for_android_tv_chromecast_google_tv
+            visibility:
+              - condition: state
+                entity: >-
+                  media_player.plex_lina_manel_plex_for_android_tv_chromecast_google_tv
+                state_not: unavailable
+        columns: 1
+badges: []
 cards: []
-visible:
-  - user: 3b50b3bd6d5443569cea9e5920317989
-theme: Mushroom
-background:
-  opacity: 1
-  alignment: center
-  size: contain
-  repeat: repeat
-  attachment: fixed

@@ -1,0 +1,121 @@
+type: sections
+path: aspi
+max_columns: 1
+title: aspi
+icon: mdi:robot-vacuum
+sections:
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: tile
+            entity: switch.super_vv_carpet_boost
+            icon: ''
+            tap_action:
+              action: toggle
+            icon_tap_action:
+              action: none
+            hold_action:
+              action: none
+            name: Boost
+            state_content: state
+          - type: tile
+            entity: switch.super_vv_child_lock
+            name: 'Verrou '
+            icon: ''
+            state_content: state
+            tap_action:
+              action: toggle
+            icon_tap_action:
+              action: none
+            hold_action:
+              action: none
+        columns: 2
+      - type: tile
+        entity: sensor.super_vv_cleaning_progress
+        name: Progression Nettoyage
+        icon: mdi:vacuum
+        vertical: false
+        hide_state: false
+        show_entity_picture: false
+        visibility:
+          - condition: state
+            entity: vacuum.super_vv
+            state_not: docked
+      - type: custom:vacuum-card
+        entity: vacuum.super_vv
+        card_mod:
+          style: |
+            ha-icon-button.more-info {
+              display: none !important;
+            }
+      - type: custom:mushroom-number-card
+        entity: number.super_vv_clean_count
+        name: Nombre de passages
+        fill_container: true
+        tap_action:
+          action: toggle
+        icon_color: purple
+        layout: horizontal
+        secondary_info: none
+        display_mode: buttons
+      - type: tile
+        entity: sensor.super_vv_last_cleaned_area
+        name: Dernier nettoyage
+      - type: tile
+        entity: sensor.super_vv_last_cleaned_time
+        name: Dernier nettoyage
+        color: cyan
+      - type: tile
+        entity: sensor.super_vv_total_cleaning_area
+        name: Total surface nettoyée
+      - type: custom:mushroom-template-card
+        primary: Total temps nettoyage
+        secondary: >
+          {{ '%02d' % (states('sensor.super_vv_total_cleaning_time') | int //
+          60) }}h {{ '%02d' % (states('sensor.super_vv_total_cleaning_time') |
+          int % 60) }}min
+        icon: mdi:progress-clock
+        entity: sensor.super_vv_total_cleaning_time
+        icon_color: cyan
+        tap_action:
+          action: more-info
+        hold_action:
+          action: none
+        double_tap_action:
+          action: none
+      - type: tile
+        entity: button.super_vv_reset_side_brush_consumable
+        name: Reset Brosse latérale
+        color: green
+        tap_action:
+          action: toggle
+      - type: tile
+        entity: button.super_vv_reset_main_brush_consumable
+        name: Reset Brosse pincipale
+        color: green
+        tap_action:
+          action: toggle
+      - type: tile
+        entity: button.super_vv_reset_filter_consumable
+        tap_action:
+          action: toggle
+        name: Reset Filtre HEPA
+        color: green
+        show_entity_picture: false
+      - type: tile
+        entity: button.super_vv_reset_sensor_consumable
+        tap_action:
+          action: toggle
+        name: Reset Capteur
+        color: green
+        show_entity_picture: false
+      - type: tile
+        entity: button.super_vv_reset_charging_contacts_consumable
+        tap_action:
+          action: toggle
+        name: Reset Capteur
+        color: green
+        show_entity_picture: false
+cards: []

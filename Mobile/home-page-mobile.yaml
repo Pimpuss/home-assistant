@@ -1,107 +1,123 @@
 title: Maison
-badges:
-  - type: entity
-    show_name: true
-    show_state: true
-    show_icon: true
-    entity: light.prise_buanderie_cumulus
-    color: orange
-    state_content: last_changed
-    icon: mdi:power-socket-au
-    name: Cumulus
-  - type: entity
-    show_name: true
-    show_state: true
-    show_icon: true
-    entity: light.vmc
-    color: ''
-    state_content: last_changed
-    icon: mdi:fan
-  - type: custom:mushroom-chips-card
-    alignment: center
-    chips:
-      - type: template
-        icon: mdi:trash-can
-        icon_color: yellow
-        content: '{{ states.sensor.poubelle_jaune.state }}'
-        entity: calendar.poubelle_jaune
-        card_mod:
-          style: |
-            ha-card {
-              {% set state = states.sensor.poubelle_jaune.state %}
-              {% if state == 'Demain' %}
-                --chip-background: #AD6700;  # Orange clair
-                --text-color: black;
-              {% elif state == 'Aujourd\'hui' %}
-                --chip-background: #F1473B;  # Rouge
-                --text-color: white;
-              {% else %}
-                --chip-background: var(--card-background-color, white);  # Fond par défaut
-                --text-color: white;  # Texte en blanc
-              {% endif %}
-            }
-        tap_action: null
-  - type: custom:mushroom-chips-card
-    alignment: center
-    chips:
-      - type: template
-        icon: mdi:trash-can
-        icon_color: grey
-        content: '{{ states.sensor.poubelle_grise.state }}'
-        entity: calendar.poubelle_grise
-        card_mod:
-          style: |
-            ha-card {
-              {% set state = states.sensor.poubelle_grise.state %}
-              {% if state == 'Demain' %}
-                --chip-background: #ad6700;  # Orange clair
-                --text-color: black;
-              {% elif state == 'Aujourd\'hui' %}
-                --chip-background: #F1473B;  # Rouge
-                --text-color: white;
-              {% else %}
-                --chip-background: var(--card-background-color, white);  # Fond par défaut
-                --text-color: white;  # Texte en blanc
-              {% endif %}
-            }
-        tap_action: null
-  - type: custom:mushroom-chips-card
-    chips:
-      - type: entity
-        entity: todo.maison
-        content_info: state
-        tap_action:
-          action: navigate
-          navigation_path: /todo
-        icon_color: green
-    visibility:
-      - condition: state
-        entity: todo.maison
-        state: '0'
-  - type: custom:mushroom-chips-card
-    chips:
-      - type: entity
-        entity: todo.maison
-        content_info: state
-        tap_action:
-          action: navigate
-          navigation_path: /todo
-        icon_color: red
-    visibility:
-      - condition: state
-        entity: todo.maison
-        state: '1'
-  - type: entity
-    show_name: false
-    show_state: true
-    show_icon: true
-    entity: sensor.nombre_de_lumieres
-    color: amber
-    icon: mdi:lightbulb-alert
-    state_content: state
-type: sections
-max_columns: 2
 sections:
+  - type: grid
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-badge
+            content: "{{ states('sensor.poubelle_jaune') }}"
+            icon: mdi:trash-can
+            color: |-
+              {% if states('sensor.poubelle_jaune') == 'Aujourd\'hui' %} red
+              {% elif states('sensor.poubelle_jaune') == 'Demain' %} orange
+              {% else %} green {% endif %}
+            label: Poubelle Jaune
+            tap_action:
+              action: more-info
+            entity: sensor.poubelle_jaune
+          - type: custom:mushroom-template-badge
+            content: "{{ states('sensor.poubelle_grise') }}"
+            icon: mdi:trash-can
+            color: |-
+              {% if states('sensor.poubelle_grise') == 'Aujourd\'hui' %} red
+              {% elif states('sensor.poubelle_grise') == 'Demain' %} orange
+              {% else %} green {% endif %}
+            label: Poubelle Jaune
+            tap_action:
+              action: more-info
+            entity: sensor.poubelle_grise
+          - type: custom:mushroom-template-badge
+            content: "{{ states('sensor.nombre_de_jour_restant_certificat') }} jour(s)"
+            icon: mdi:calendar
+            color: >-
+              {% if states('sensor.nombre_de_jour_restant_certificat') <= '10'
+              %} red
+
+              {% elif states('sensor.nombre_de_jour_restant_certificat') <= '20'
+              %} orange
+
+              {% else %} green {% endif %}
+            label: Certificats
+            tap_action:
+              action: more-info
+            entity: sensor.nombre_de_jour_restant_certificat
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: template
+            entity: switch.prise_cumulus
+            tap_action:
+              action: more-info
+            hold_action:
+              action: toggle
+            content: |
+              {{ relative_time(states.switch.prise_cumulus.last_changed)
+                  | replace('seconds', 'secondes')
+                  | replace('minutes', 'minutes')
+                  | replace('minute', 'minute')
+                  | replace('hours', 'heures')
+                  | replace('hour', 'heure')
+                  | replace('days', 'jours')
+                  | replace('day', 'jour')
+                  | replace('ago', 'il y a')
+              }}
+            icon: mdi:water-boiler
+            icon_color: |
+              {% if states('switch.prise_cumulus') == 'on' %} 
+                orange
+              {% else %} 
+                grey
+              {% endif %}
+          - type: template
+            entity: light.vmc
+            content: |
+              {{ relative_time(states.light.vmc.last_changed)
+                  | replace('seconds', 'secondes')
+                  | replace('minutes', 'minutes')
+                  | replace('minute', 'minute')
+                  | replace('hours', 'heures')
+                  | replace('hour', 'heure')
+                  | replace('days', 'jours')
+                  | replace('day', 'jour')
+                  | replace('ago', 'il y a')
+              }}
+            icon: mdi:fan
+            icon_color: |
+              {% if states('light.vmc') == 'on' %} 
+                orange
+              {% else %} 
+                grey
+              {% endif %}
+          - type: template
+            entity: todo.maison
+            icon: mdi:cart
+            icon_color: |-
+              {% if states('todo.maison') | int > 0 %} 
+                red
+              {% else %} 
+                green 
+              {% endif %}
+            tap_action:
+              action: navigate
+              navigation_path: /todo
+            content: "{{ states('todo.maison') }}"
+          - type: template
+            tap_action:
+              action: toggle
+            entity: light.toute_la_maison
+            icon: |-
+              {% if states('sensor.nombre_de_lumieres') | int > 0 %} 
+                mdi:lightbulb-alert
+              {% else %} 
+                mdi:lightbulb 
+              {% endif %}
+            icon_color: |-
+              {% if states('sensor.nombre_de_lumieres') | int > 0 %} 
+                red
+              {% else %} 
+                green 
+              {% endif %}
+            content: "{{ states('sensor.nombre_de_lumieres') }}"
+        alignment: center
   - type: grid
     cards:
       - square: false
@@ -119,6 +135,19 @@ sections:
             show_state: true
             show_attribute: true
             sub_button:
+              - entity: sensor.temperature_cuisine_temperature
+                icon: mdi:home
+                show_state: true
+                name: Température maison
+              - entity: sensor.bauvin_humidity
+                show_background: true
+                show_name: false
+                show_last_changed: false
+                show_attribute: false
+                show_icon: true
+                show_state: true
+                name: Humidité
+                state_background: false
               - entity: weather.bauvin
                 state_background: false
                 show_state: false
@@ -129,15 +158,6 @@ sections:
                 icon: mdi:thermometer
                 name: Température Générale
                 show_last_changed: false
-              - entity: sensor.bauvin_humidity
-                show_background: true
-                show_name: false
-                show_last_changed: false
-                show_attribute: false
-                show_icon: true
-                show_state: true
-                name: Humidité
-                state_background: false
               - entity: sensor.bauvin_freeze_chance
                 state_background: false
                 show_background: true
@@ -153,6 +173,15 @@ sections:
                 show_background: true
                 show_last_changed: false
                 name: Etat Nuage
+              - entity: sensor.bauvin_wind_speed
+                show_state: true
+                show_icon: true
+                state_background: false
+                show_name: false
+                show_background: true
+                show_last_changed: false
+                name: Vitesse du vent
+                icon: mdi:weather-dust
             name: ''
             double_tap_action:
               action: more-info
@@ -197,7 +226,7 @@ sections:
           - type: custom:bubble-card
             card_type: pop-up
             hash: '#meteo'
-            show_header: true
+            show_header: false
             name: ''
             show_state: true
             show_name: false
@@ -207,7 +236,7 @@ sections:
           - type: custom:meteofrance-weather-card
             entity: weather.bauvin
             name: Bauvin
-            hourly_forecast: false
+            hourly_forecast: true
             rainChanceEntity: sensor.monthyon_rain_chance
             uvEntity: sensor.monthyon_uv
             cloudCoverEntity: sensor.monthyon_cloud_cover
@@ -219,48 +248,229 @@ sections:
             wind_forecast_icons: false
             humidity_forecast: true
             details: true
+            one_hour_forecast: true
+  - type: grid
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#robert'
+            show_header: true
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 7px
+            width_desktop: 540px
+            button_type: state
+            entity: sensor.robert_current_humidity
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+          - type: humidifier
+            entity: humidifier.robert
+            theme: ios-dark-mode-blue-red
+            show_current_as_primary: true
+            card_mod:
+              style: |
+                ha-card {
+                  ha-icon-button.more-info {
+                    display: none !important;
+                  }
+                }
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: humidifier.robert
+                icon: mdi:power
+                tap_action:
+                  action: toggle
+                icon_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                state_content: state
+                name: État
+              - type: tile
+                entity: switch.robert_auto_mode
+                name: Auto
+                icon: mdi:refresh-auto
+                state_content: state
+                tap_action:
+                  action: toggle
+                icon_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+              - type: tile
+                entity: switch.robert_display
+                icon: mdi:monitor-screenshot
+                name: Affichage
+                state_content: state
+                tap_action:
+                  action: toggle
+                icon_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+            columns: 3
+          - type: custom:mushroom-number-card
+            entity: number.robert_mist_level
+            layout: horizontal
+            name: Puissance
+            fill_container: false
+            tap_action:
+              action: toggle
+            display_mode: buttons
+            icon_color: deep-orange
+            secondary_info: last-changed
+  - type: grid
+    cards:
       - square: false
         type: grid
         cards:
-          - type: custom:bubble-card
-            card_type: separator
-            name: 📍 Entrée
-            card_mod:
-              style: |
-                .bubble-separator.separator-container {
-                  margin-top: 20px;
-                  margin-bottom: 20px;
-                  
-                }
-            sub_button:
-              - entity: light.hall_escalier
-                name: Hall-Escalier
-                show_name: true
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:door
+                icon_color: ''
+                primary: Porte d'entrée
+                secondary: ''
+                layout: horizontal
                 tap_action:
-                  action: toggle
+                  action: navigate
+                  navigation_path: '#porte-entree'
                 double_tap_action:
-                  action: more-info
+                  action: none
                 hold_action:
-                  action: more-info
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.porte_d_entree
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.porte_d_entree
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: -8px;
+                    }
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:coat-rack
+                icon_color: ''
+                primary: Hall d'entrée
+                secondary: ''
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#hall'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.hall_d_entree
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.hall_d_entree
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: -8px;
+                    }
+        columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#porte-entree'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
           - type: heading
             icon: ''
             heading_style: title
             heading: 🚪 Porte d'entrée
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.porte_d_entree
-                color: state
-                icon: ''
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.porte_d_entree_batterie
-                color: state
+            badges: []
+            tap_action:
+              action: none
           - type: custom:bubble-card
             card_type: button
-            button_type: slider
+            button_type: switch
             entity: light.spot_1_porte_entree
             tap_action:
               action: toggle
@@ -281,7 +491,6 @@ sections:
                   action: more-info
                 show_state: false
                 show_attribute: true
-                show_last_changed: false
             name: Tout
             double_tap_action:
               action: more-info
@@ -292,34 +501,48 @@ sections:
             show_name: true
             card_layout: large
             icon: mdi:power
-        columns: 1
-      - square: false
-        type: grid
+            button_action:
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.porte_d_entree_batterie
+                name: Porte
+            columns: 2
+      - type: vertical-stack
         cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#hall'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
           - type: heading
             icon: ''
             heading: 🏠 Hall d'entrée
             heading_style: title
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.hall_d_entree
-                color: state
-                icon: ''
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.hall_d_entree_dressing_batterie
-                color: state
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.hue_tap_dial_hall_d_entree_batterie
-                color: state
+            badges: []
+            tap_action:
+              action: none
           - type: custom:bubble-card
             card_type: button
-            button_type: slider
+            button_type: switch
             entity: light.hall_d_entree
             tap_action:
               action: toggle
@@ -331,7 +554,7 @@ sections:
             sub_button:
               - name: Plafonnier
                 show_name: true
-                icon: mdi:light-recessed
+                icon: phu:ceiling-aurelle-circle
                 tap_action:
                   action: toggle
                 double_tap_action:
@@ -343,7 +566,13 @@ sections:
               - entity: light.ruban_hall_d_entree
                 name: Ruban
                 show_name: true
-                icon: mdi:led-strip-variant
+                icon: phu:light-strip
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
             name: Tout
             double_tap_action:
               action: more-info
@@ -354,24 +583,164 @@ sections:
             show_name: true
             card_layout: large
             icon: mdi:power
-        columns: 1
+            button_action:
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.hall_d_entree_dressing_batterie
+                name: Dressing
+              - type: tile
+                entity: sensor.hue_tap_dial_hall_d_entree_batterie
+                name: Entrée
+              - type: tile
+                entity: sensor.hue_tap_dial_hall_d_entree_batterie
+                name: Tap Dial
+            columns: 3
+  - type: grid
+    cards:
       - square: false
         type: grid
         cards:
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:stairs
+                icon_color: ''
+                primary: Escalier
+                secondary: ''
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#escaliers'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.escalier
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.escalier
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: -8px;
+                    }
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:toilet
+                icon_color: ''
+                primary: Toilettes
+                secondary: ''
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#toilettes'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: toggle
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.toilettes
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.toilettes
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: -8px;
+                    }
+        columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#escaliers'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
           - type: heading
             icon: ''
             heading: ↗️  Escaliers
             heading_style: title
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.escalier
-                color: state
-                icon: ''
+            badges: []
           - type: custom:bubble-card
             card_type: button
-            button_type: slider
+            button_type: switch
             entity: light.escalier
             tap_action:
               action: toggle
@@ -396,6 +765,12 @@ sections:
                 name: Spot2
                 show_name: true
                 icon: mdi:lightbulb-spot
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
             name: Tout
             double_tap_action:
               action: more-info
@@ -406,29 +781,41 @@ sections:
             show_name: true
             card_layout: large
             icon: mdi:power
-        columns: 1
-      - square: false
-        type: grid
+            button_action:
+              tap_action:
+                action: more-info
+              double_tap_action:
+                action: more-info
+      - type: vertical-stack
         cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#toilettes'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
           - type: heading
             icon: ''
             heading_style: title
             heading: 🚽  Toilettes
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.toilettes
-                color: state
-                icon: ''
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.toilettes_batterie
-                color: state
+            badges: []
+            tap_action:
+              action: none
           - type: custom:bubble-card
             card_type: button
-            button_type: slider
+            button_type: switch
             entity: light.plafonnier_toilettes
             tap_action:
               action: toggle
@@ -458,456 +845,2520 @@ sections:
             show_name: true
             card_layout: large
             icon: mdi:power
-        columns: 1
+            button_action:
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.toilettes_batterie
+                name: Entrée
+            columns: 2
   - type: grid
     cards:
       - square: false
         type: grid
         cards:
-          - type: custom:bubble-card
-            card_type: separator
-            name: 📍 RDC
-            card_mod:
-              style: |
-                .bubble-separator.separator-container {
-                  margin-top: 20px;
-                  margin-bottom: 20px;
-                  
-                }
-            sub_button:
-              - entity: light.sejour
-                show_name: true
-                show_state: false
-                show_last_changed: false
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:sofa
+                icon_color: ''
+                primary: Salon
+                secondary: >-
+                  🌡️ {{ states("sensor.temperature_cuisine_temperature") }}°C |
+                  💧 {{
+                    states("sensor.temperature_cuisine_humidity") }} %
+                layout: horizontal
                 tap_action:
-                  action: toggle
+                  action: navigate
+                  navigation_path: '#salon'
                 double_tap_action:
-                  action: more-info
+                  action: none
                 hold_action:
-                  action: more-info
-                name: Salon-Cuisine
-          - type: heading
-            icon: ''
-            heading: 🖥️ Bureau Pimpus
-            heading_style: title
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.bureau_pimpus
-                color: state
-                icon: mdi:led-strip-variant
-          - type: custom:bubble-card
-            card_type: button
-            button_type: slider
-            entity: light.lightstrip_bureau
-            tap_action:
-              action: toggle
-            show_icon: true
-            scrolling_effect: true
-            show_state: true
-            show_attribute: true
-            attribute: brightness
-            sub_button:
-              - name: Ruban
-                show_name: true
-                icon: mdi:led-strip-variant
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                show_background: true
-            name: Tout
-            double_tap_action:
-              action: more-info
-            hold_action:
-              action: more-info
-            show_last_changed: false
-            slider_live_update: false
-            show_name: true
-            card_layout: normal
-            icon: mdi:power
-        columns: 1
-      - square: false
-        type: grid
-        cards:
-          - type: heading
-            icon: ''
-            heading: 🛋️ Salon
-            heading_style: title
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
                 entity: light.salon
-                color: state
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.salon
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                  - type: template
+                    entity: media_player.tv_salon_2
+                    icon: |
+                      {% if is_state(entity, 'on') %} 
+                        mdi:television
+                      {% else %} 
+                        mdi:television-off
+                      {% endif %}
+                    icon_color: |
+                      {% if is_state(entity, 'on') %} 
+                       green
+                      {% else %} 
+                        red
+                      {% endif %}
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#tv-salon'
+                    hold_action:
+                      action: toggle
+                    double_tap_action:
+                      action: toggle
+                  - type: template
+                    tap_action:
+                      action: perform-action
+                      perform_action: automation.trigger
+                      target:
+                        entity_id: automation.soiree_netflix
+                      data:
+                        skip_condition: true
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                    entity: automation.soiree_netflix
+                    icon: mdi:netflix
+                    icon_color: red
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: 10px;
+                    }
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:chair-rolling
+                icon_color: ''
+                primary: Bureau Pimpus
+                secondary: ''
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#bureau-pimpus'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.bureau_pimpus
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.bureau_pimpus
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: 10px;
+                    }
+        columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#salon'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - square: false
+            type: grid
+            cards:
+              - type: heading
                 icon: ''
-              - type: entity
-                show_state: true
+                heading: 🛋️ Salon
+                heading_style: title
+                badges: []
+                tap_action:
+                  action: none
+              - type: custom:bubble-card
+                card_type: button
+                button_type: switch
+                entity: light.salon
+                tap_action:
+                  action: toggle
                 show_icon: true
+                scrolling_effect: true
+                show_state: true
+                show_attribute: true
+                attribute: brightness
+                sub_button:
+                  - entity: light.hue_centris_ceiling_1
+                    name: ''
+                    show_name: true
+                    icon: mdi:light-recessed
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.hue_centris_spot_1
+                    icon: mdi:track-light
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                    show_name: true
+                    name: S1
+                  - entity: light.hue_centris_spot_2
+                    name: S2
+                    show_name: true
+                    icon: mdi:track-light
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.hue_centris_spot_3
+                    name: S3
+                    show_name: true
+                    icon: mdi:track-light
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.hue_centris_spot_4
+                    name: S4
+                    show_name: true
+                    icon: mdi:track-light
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                name: Tout
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_last_changed: false
+                slider_live_update: false
+                show_name: true
+                card_layout: large
+                icon: mdi:power
+                button_action:
+                  tap_action:
+                    action: more-info
+                  hold_action:
+                    action: toggle
+              - type: custom:bubble-card
+                card_type: button
+                button_type: switch
+                tap_action:
+                  action: toggle
+                show_icon: true
+                scrolling_effect: true
+                show_state: true
+                show_attribute: true
+                attribute: brightness
+                sub_button:
+                  - name: Ruban
+                    show_name: true
+                    icon: mdi:led-strip-variant
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                    show_background: true
+                name: Tout
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_last_changed: false
+                slider_live_update: false
+                show_name: true
+                card_layout: large
+                icon: mdi:power
+                entity: light.sofa
+                styles: ''
+                button_action:
+                  tap_action:
+                    action: more-info
+                  hold_action:
+                    action: toggle
+              - type: custom:bubble-card
+                card_type: media-player
+                entity: media_player.tv_salon_2
+                show_icon: true
+                show_name: true
+                scrolling_effect: true
+                hide:
+                  play_pause_button: false
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                cover_background: true
+                icon: mdi:television
+                card_layout: large
+            columns: 1
+          - square: false
+            type: grid
+            cards:
+              - type: tile
                 entity: sensor.salon_entree_batterie
-                color: state
+                name: 'Entrée '
+                hide_state: false
+                vertical: false
+            columns: 1
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.temperature_cuisine_battery
+                name: Capteur
+                hide_state: false
+                vertical: false
+              - type: tile
+                entity: sensor.temperature_cuisine_linkquality
+                name: Capteur
+                hide_state: false
+                vertical: false
+              - type: tile
+                entity: sensor.temperature_cuisine_last_seen
+                name: Capteur
+            columns: 3
+          - square: false
+            type: grid
+            cards:
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_cuisine_temperature
+                detail: 1
+                name: Salon
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_cuisine_humidity
+                detail: 1
+                name: Salon
+            columns: 2
+      - type: vertical-stack
+        cards:
           - type: custom:bubble-card
-            card_type: media-player
-            entity: media_player.tv_salon_2
-            show_icon: true
-            show_name: true
-            scrolling_effect: true
-            hide:
-              play_pause_button: false
-            tap_action:
-              action: toggle
-            double_tap_action:
-              action: more-info
-            hold_action:
-              action: more-info
-            cover_background: true
-          - type: custom:bubble-card
-            card_type: button
-            button_type: slider
-            entity: light.salon
-            tap_action:
-              action: toggle
-            show_icon: true
-            scrolling_effect: true
+            card_type: pop-up
+            hash: '#tv-salon'
+            show_header: true
+            name: ''
             show_state: true
-            show_attribute: true
-            attribute: brightness
-            sub_button:
-              - entity: light.hue_centris_ceiling_1
-                name: ''
-                show_name: true
-                icon: mdi:light-recessed
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-              - entity: light.hue_centris_spot_1
-                icon: mdi:track-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                show_name: true
-                name: S1
-              - entity: light.hue_centris_spot_2
-                name: S2
-                show_name: true
-                icon: mdi:track-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-              - entity: light.hue_centris_spot_3
-                name: S3
-                show_name: true
-                icon: mdi:track-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-              - entity: light.hue_centris_spot_4
-                name: S4
-                show_name: true
-                icon: mdi:track-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-            name: Tout
-            double_tap_action:
-              action: more-info
-            hold_action:
-              action: more-info
+            show_name: true
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
             show_last_changed: false
-            slider_live_update: false
-            show_name: true
+            show_attribute: false
+            hide_backdrop: true
             card_layout: normal
-            icon: mdi:power
-          - type: custom:bubble-card
-            card_type: button
-            button_type: slider
-            tap_action:
-              action: toggle
+            scrolling_effect: false
             show_icon: true
-            scrolling_effect: true
-            show_state: true
-            show_attribute: true
-            attribute: brightness
+            icon: mdi:television-ambient-light
             sub_button:
-              - name: Ruban
-                show_name: true
-                icon: mdi:led-strip-variant
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
+              - entity: switch.tv_philips_ambilight_hue
+                icon: mdi:television-ambient-light
                 show_background: true
-            name: Tout
+                state_background: true
+                name: Hue
+                show_name: true
+                show_state: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+            button_type: switch
+            entity: light.tv_philips_ambilight
+            use_accent_color: false
+            tap_action:
+              action: toggle
             double_tap_action:
-              action: more-info
+              action: none
             hold_action:
-              action: more-info
-            show_last_changed: false
-            slider_live_update: false
-            show_name: true
-            card_layout: normal
-            icon: mdi:power
-            entity: light.sofa
-            styles: ''
-        columns: 1
-      - square: false
-        type: grid
+              action: none
+          - type: vertical-stack
+            cards:
+              - square: true
+                columns: 3
+                type: grid
+                cards:
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      target:
+                        entity_id: remote.tv_salon
+                      data:
+                        command: POWER
+                    hold_action:
+                      action: none
+                    icon: mdi:power
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #F44336 !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:arrow-up-bold-circle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #4A8CF4 !important;
+                        }
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: DPAD_UP
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: none
+                  - show_name: false
+                    show_icon: true
+                    type: picture
+                    image: >-
+                      https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Google_Assistant_logo.svg/1024px-Google_Assistant_logo.svg.png
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      target:
+                        entity_id: remote.tv_salon
+                      data:
+                        command: SEARCH
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          display:flex;
+                          justify-content: center;
+                          align-items: center;
+                        }
+                        ha-card img {
+                          width: 40% !important; 
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:arrow-left-bold-circle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #33AA54 !important;
+                        }
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: DPAD_LEFT
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: none
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:circle
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: DPAD_CENTER
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: DPAD_CENTER
+                        hold_secs: 0.5
+                      target:
+                        entity_id: remote.tv_salon
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:arrow-right-bold-circle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #FBBE03 !important;
+                        }
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: DPAD_RIGHT
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: none
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:backup-restore
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: BACK
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:arrow-down-bold-circle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #EB4536 !important;
+                        }
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: DPAD_DOWN
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: none
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:home-circle
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: HOME
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+              - square: false
+                columns: 3
+                type: grid
+                cards:
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:skip-previous-circle
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: MEDIA_PREVIOUS
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: MEDIA_REWIND
+                      target:
+                        entity_id: remote.tv_salon
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:play-pause
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: MEDIA_PLAY_PAUSE
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: MEDIA_STOP
+                      target:
+                        entity_id: remote.tv_salon
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:skip-next-circle
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: MEDIA_NEXT
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: perform-action
+                      perform_action: remote.send_command
+                      data:
+                        command: MEDIA_FAST_FORWARD
+                      target:
+                        entity_id: remote.tv_salon
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:volume-minus
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: vol_dec
+                    hold_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: vol_dec
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:volume-off
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: mute
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:volume-plus
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: vol_inc
+                    hold_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: vol_inc
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+              - square: false
+                columns: 4
+                type: grid
+                cards:
+                  - show_name: false
+                    show_icon: true
+                    type: picture
+                    image: >-
+                      https://upload.wikimedia.org/wikipedia/commons/8/8e/Plex_favicon.png
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.turn_on
+                      data:
+                        activity: com.plexapp.android
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: none
+                    show_state: false
+                    card_mod:
+                      style: |
+                        ha-card {
+                          display:flex;
+                          justify-content: center;
+                          align-items: center;
+                        }
+                        ha-card img {
+                          width: 50% !important; 
+                          height: auto; 
+                          max-width: 200px; 
+                          aspect-ratio: 1 / 1; 
+                          border-radius: 50%; 
+                          object-fit: cover; 
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: picture
+                    image: >-
+                      https://upload.wikimedia.org/wikipedia/commons/f/ff/Netflix-new-icon.png
+                    tap_action:
+                      action: call-service
+                      perform_action: remote.turn_on
+                      data:
+                        activity: com.netflix.ninja
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          display:flex;
+                          justify-content: center;
+                          align-items: center;
+                        }
+                        ha-card img {
+                          width: 50% !important; 
+                          height: auto; 
+                          max-width: 200px; 
+                          aspect-ratio: 1 / 1; 
+                          border-radius: 50%; 
+                          object-fit: cover; 
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: picture
+                    image: >-
+                      https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png
+                    tap_action:
+                      action: perform-action
+                      perform_action: remote.turn_on
+                      data:
+                        activity: https://www.youtube.com
+                      target:
+                        entity_id: remote.tv_salon
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          display:flex;
+                          justify-content: center;
+                          align-items: center;
+                        }
+                        ha-card img {
+                          width: 60% !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: picture
+                    image: >-
+                      https://res.cloudinary.com/groupemeilleurtaux/image/upload/v1724934253/Box%20Mobile/FREE.png
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#freebox'
+                    hold_action:
+                      action: navigate
+                      navigation_path: '#freebox'
+          - type: media-control
+            name: Tv Salon
+            entity: >-
+              media_player.plex_lina_manel_plex_for_android_tv_chromecast_google_tv
+            visibility:
+              - condition: state
+                entity: >-
+                  media_player.plex_lina_manel_plex_for_android_tv_chromecast_google_tv
+                state_not: unavailable
+      - type: vertical-stack
         cards:
-          - type: heading
-            icon: ''
-            heading: 🍽️ Cuisine
-            heading_style: title
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.cuisine
-                color: state
-                icon: ''
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.cuisine_entee_salle_a_manger_batterie
-                color: state
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.cuisine_entee_salle_a_manger_batterie
-                color: state
           - type: custom:bubble-card
-            card_type: media-player
-            entity: media_player.cuisine
-            show_icon: true
-            show_name: true
-            scrolling_effect: true
-            hide:
-              play_pause_button: false
-            tap_action:
-              action: toggle
-            double_tap_action:
-              action: more-info
-            hold_action:
-              action: more-info
-            cover_background: true
-          - type: custom:bubble-card
-            card_type: button
-            button_type: slider
-            entity: light.cuisine
-            tap_action:
-              action: toggle
-            show_icon: true
-            scrolling_effect: true
+            card_type: pop-up
+            hash: '#freebox'
+            show_header: false
+            name: ''
             show_state: true
-            show_attribute: true
-            attribute: brightness
-            sub_button:
-              - entity: light.cuisine_spot_1
-                name: S1
-                show_name: true
-                icon: mdi:track-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-              - entity: light.cuisine_spot_2
-                icon: mdi:track-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                show_name: true
-                name: S2
-              - entity: light.cuisine_spot_3
-                name: S3
-                show_name: true
-                icon: mdi:track-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-              - entity: light.cuisine_spot_4
-                name: S4
-                show_name: true
-                icon: mdi:track-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-            name: Tout
-            double_tap_action:
-              action: more-info
-            hold_action:
-              action: more-info
-            show_last_changed: false
-            slider_live_update: false
-            show_name: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            hide_backdrop: true
             card_layout: normal
-            icon: mdi:power
-        columns: 1
-      - square: false
-        type: grid
+          - square: false
+            type: grid
+            cards:
+              - square: true
+                type: grid
+                cards:
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:power
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: power
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #EB4436 !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:arrow-up-bold-circle
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: up
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:menu
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: green
+                    hold_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: vol_inc
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #74B978 !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:arrow-left-bold-circle
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: left
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:checkbox-blank-circle
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: ok
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:arrow-right-bold-circle
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: right
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:backup-restore
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: red
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #AA1614 !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:arrow-down-bold-circle
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: down
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:home-circle
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: home
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: ##4B81BD !important;
+                        }
+              - square: false
+                type: grid
+                cards:
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:skip-previous-circle-outline
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: bwd
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:play-pause
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: play
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:skip-next-circle-outline
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: fwd
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:volume-plus
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: vol_inc
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #7D4FFE !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:volume-mute
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: mute
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:chevron-up-box
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: prgm_inc
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #2a9d8f !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:volume-minus
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: vol_dec
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #7D4FFE !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: fas:circle-info
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: info
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #E7AB30 !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:chevron-down-box
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: prgm_dec
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: #2a9d8f !important;
+                        }
+                columns: 3
+              - square: false
+                type: grid
+                cards:
+                  - show_name: false
+                    show_icon: true
+                    type: picture
+                    image: >-
+                      https://www.keyweo.com/wp-content/uploads/2021/09/Diseno-sin-titulo-9.png
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#tv-salon'
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          display: flex;
+                          justify-content: center; /* Pour centrer l'image */
+                          align-items: center; /* Pour centrer verticalement si nécessaire */
+                        }
+                        ha-card img {
+                          width: 90%; /* Applique la largeur à 40% */
+                        }
+                  - type: picture
+                    image: >-
+                      https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png
+                    show_name: false
+                    show_icon: true
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: youtube
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          display: flex;
+                          justify-content: center; /* Pour centrer l'image */
+                          align-items: center; /* Pour centrer verticalement si nécessaire */
+                        }
+                        ha-card img {
+                          width: 45%; /* Applique la largeur à 40% */
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: picture
+                    image: >-
+                      https://upload.wikimedia.org/wikipedia/commons/f/ff/Netflix-new-icon.png
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: netflix
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          display:flex;
+                          justify-content: center;
+                          align-items: center;
+                        }
+                        ha-card img {
+                          width: 40% !important; 
+                          height: auto; 
+                          max-width: 200px; 
+                          aspect-ratio: 1 / 1; 
+                          border-radius: 50%; 
+                          object-fit: cover; 
+                        }
+              - square: false
+                type: grid
+                cards:
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:close
+                    tap_action:
+                      action: navigate
+                      navigation_path: /test-mobile-2
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:numeric
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#number'
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    icon: mdi:television
+                    tap_action:
+                      action: perform-action
+                      perform_action: freebox_player.remote
+                      target: {}
+                      data:
+                        code: tv
+                    hold_action:
+                      action: none
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --mdc-icon-button-size: 100%;
+                        }
+                        ha-state-icon {
+                          color: white !important;
+                        }
+            columns: 1
+      - type: vertical-stack
         cards:
-          - type: heading
-            icon: ''
-            heading: 🛁 Salle de bain enfants
-            heading_style: title
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.salle_de_bain_enfants
-                color: state
-                icon: ''
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.salle_de_bain_enfants_batterie
-                color: state
           - type: custom:bubble-card
-            card_type: button
-            button_type: slider
-            entity: light.salle_de_bain_enfants
-            tap_action:
-              action: toggle
-            show_icon: true
-            scrolling_effect: true
+            card_type: pop-up
+            hash: '#number'
+            show_header: false
+            name: ''
             show_state: true
-            show_attribute: true
-            attribute: brightness
-            sub_button:
-              - entity: light.hue_color_spot_sdb_1
-                name: S1
-                show_name: true
-                icon: mdi:lightbulb-spot
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-              - entity: light.hue_color_spot_sdb_2
-                icon: mdi:lightbulb-spot
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                show_name: true
-                name: S2
-              - entity: light.hue_color_spot_sdb_3
-                name: S3
-                show_name: true
-                icon: mdi:lightbulb-spot
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-              - entity: light.hue_color_spot_sdb_4
-                name: S4
-                show_name: true
-                icon: mdi:lightbulb-spot
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-            name: Tout
-            double_tap_action:
-              action: more-info
-            hold_action:
-              action: more-info
-            show_last_changed: false
-            slider_live_update: false
-            show_name: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            hide_backdrop: true
             card_layout: normal
-            icon: mdi:power
-          - type: custom:mushroom-chips-card
-            chips:
-              - type: entity
-                entity: scene.salle_de_bain_enfants_bain_mougnoute
-                icon_color: indigo
+          - square: true
+            type: grid
+            cards:
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:numeric-1-circle
+                tap_action:
+                  action: perform-action
+                  perform_action: freebox_player.remote
+                  target: {}
+                  data:
+                    code: '1'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:numeric-2-circle
+                tap_action:
+                  action: perform-action
+                  perform_action: freebox_player.remote
+                  target: {}
+                  data:
+                    code: '2'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:numeric-3-circle
+                tap_action:
+                  action: perform-action
+                  perform_action: freebox_player.remote
+                  target: {}
+                  data:
+                    code: '3'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:numeric-4-circle
+                tap_action:
+                  action: perform-action
+                  perform_action: freebox_player.remote
+                  target: {}
+                  data:
+                    code: '4'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:numeric-5-circle
+                tap_action:
+                  action: perform-action
+                  perform_action: freebox_player.remote
+                  target: {}
+                  data:
+                    code: '5'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:numeric-6-circle
+                tap_action:
+                  action: perform-action
+                  perform_action: freebox_player.remote
+                  target: {}
+                  data:
+                    code: '6'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:numeric-7-circle
+                tap_action:
+                  action: perform-action
+                  perform_action: freebox_player.remote
+                  target: {}
+                  data:
+                    code: '7'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:numeric-8-circle
+                tap_action:
+                  action: perform-action
+                  perform_action: freebox_player.remote
+                  target: {}
+                  data:
+                    code: '8'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:numeric-9-circle
+                tap_action:
+                  action: perform-action
+                  perform_action: freebox_player.remote
+                  target: {}
+                  data:
+                    code: '9'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:backup-restore
+                tap_action:
+                  action: navigate
+                  navigation_path: '#freebox'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: mdi:numeric-0-circle
+                tap_action:
+                  action: perform-action
+                  perform_action: freebox_player.remote
+                  target: {}
+                  data:
+                    code: '0'
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+              - show_name: false
+                show_icon: true
+                type: button
+                icon: ''
+                tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                card_mod:
+                  style: |
+                    ha-card {
+                      --mdc-icon-button-size: 100%;
+                    }
+                    ha-state-icon {
+                      color: white !important;
+                    }
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#bureau-pimpus'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - square: false
+            type: grid
+            cards:
+              - type: heading
+                icon: ''
+                heading: 🖥️ Bureau Pimpus
+                heading_style: title
+                badges: []
+              - type: custom:bubble-card
+                card_type: button
+                button_type: switch
+                entity: light.lightstrip_bureau
                 tap_action:
                   action: toggle
-                icon: mdi:palette
-                content_info: name
-                name: Bain Manel 👧
-                use_entity_picture: false
-              - type: entity
-                entity: scene.salle_de_bain_enfants_detente
-                content_info: name
-                name: Détente
-                icon_color: orange
-                tap_action:
+                show_icon: true
+                scrolling_effect: true
+                show_state: true
+                show_attribute: true
+                attribute: brightness
+                sub_button:
+                  - name: Ruban
+                    show_name: true
+                    icon: phu:light-strip
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                    show_background: true
+                name: Tout
+                double_tap_action:
                   action: toggle
-        columns: 1
-    column_span: 1
+                hold_action:
+                  action: more-info
+                show_last_changed: false
+                slider_live_update: false
+                show_name: true
+                card_layout: large
+                icon: mdi:power
+                button_action:
+                  double_tap_action:
+                    action: toggle
+                  tap_action:
+                    action: more-info
+                  hold_action:
+                    action: toggle
+            columns: 1
   - type: grid
     cards:
-      - type: custom:bubble-card
-        card_type: separator
-        name: 📍 Étage
-        card_mod:
-          style: |
-            .bubble-separator.separator-container {
-              margin-top: 20px;
-              margin-bottom: 20px;
-              
-            }
-        sub_button: []
       - square: false
         type: grid
         cards:
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:fridge
+                icon_color: ''
+                primary: Cuisine
+                secondary: >-
+                  🌡️ {{ states("sensor.temperature_cuisine_temperature") }}°C |
+                  💧 {{
+                    states("sensor.temperature_cuisine_humidity") }} %
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#cuisine'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.cuisine
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.cuisine
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                  - type: template
+                    entity: media_player.cuisine
+                    icon: |
+                      {% if is_state(entity, 'on') %} 
+                        mdi:speaker
+                      {% elif is_state(entity, 'off') %} 
+                          mdi:speaker-off
+                      {% elif is_state(entity, 'idle') %} 
+                        mdi:speaker-wireless
+                      {% elif is_state(entity, 'playing') %} 
+                        mdi:play-circle
+                      {% elif is_state(entity, 'paused') %} 
+                        mdi:pause-circle
+                      {% endif %}
+                    icon_color: |
+                      {% if is_state(entity, 'on') %} 
+                        white
+                      {% elif is_state(entity, 'off') %} 
+                        red
+                      {% elif is_state(entity, 'idle') %} 
+                        orange
+                      {% elif is_state(entity, 'playing') %} 
+                        green
+                      {% elif is_state(entity, 'paused') %} 
+                        orange
+                      {% endif %}
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#google-home-cuisine'
+                    hold_action:
+                      action: toggle
+                    double_tap_action:
+                      action: toggle
+                  - type: template
+                    entity: humidifier.robert
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#robert'
+                    hold_action:
+                      action: toggle
+                    double_tap_action:
+                      action: toggle
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:air-humidifier
+                      {% else %}
+                       mdi:air-humidifier-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       green
+                      {% else %}
+                       red
+                      {% endif %}
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: 10px;
+                    }
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: phu:rooms-bathroom
+                icon_color: ''
+                primary: Sdb enfants
+                secondary: >-
+                  🌡️ {{ states("sensor.temperature_sdb_enfants_temperature")
+                  }}°C | 💧 {{
+                    states("sensor.temperature_sdb_enfants_humidity") }} %
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#sdb-enfants'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.salle_de_bain_enfants
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.salle_de_bain_enfants
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                  - type: template
+                    tap_action:
+                      action: perform-action
+                      perform_action: automation.trigger
+                      target:
+                        entity_id: automation.bain_manel
+                      data:
+                        skip_condition: true
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                    entity: scene.salle_de_bain_enfants_bain_mougnoute
+                    icon: mdi:palette
+                    icon_color: indigo
+                    picture: ''
+                    content: Bain
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: 10px;
+                    }
+        columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#cuisine'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - square: false
+            type: grid
+            cards:
+              - type: heading
+                icon: ''
+                heading: 🍽️ Cuisine
+                heading_style: title
+                badges: []
+                tap_action:
+                  action: none
+              - type: custom:bubble-card
+                card_type: button
+                button_type: switch
+                entity: light.cuisine
+                tap_action:
+                  action: toggle
+                show_icon: true
+                scrolling_effect: true
+                show_state: true
+                show_attribute: true
+                attribute: brightness
+                sub_button:
+                  - entity: light.cuisine_spot_1
+                    name: S1
+                    show_name: true
+                    icon: mdi:track-light
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.cuisine_spot_2
+                    icon: mdi:track-light
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                    show_name: true
+                    name: S2
+                  - entity: light.cuisine_spot_3
+                    name: S3
+                    show_name: true
+                    icon: mdi:track-light
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.cuisine_spot_4
+                    name: S4
+                    show_name: true
+                    icon: mdi:track-light
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                name: Tout
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_last_changed: false
+                slider_live_update: false
+                show_name: true
+                card_layout: large
+                icon: mdi:power
+                button_action:
+                  tap_action:
+                    action: more-info
+                  hold_action:
+                    action: toggle
+              - type: custom:bubble-card
+                card_type: media-player
+                entity: media_player.cuisine
+                show_icon: true
+                show_name: true
+                scrolling_effect: true
+                hide:
+                  play_pause_button: false
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                cover_background: true
+                card_layout: large
+            columns: 1
+          - type: vertical-stack
+            cards:
+              - square: false
+                type: grid
+                cards:
+                  - type: tile
+                    entity: sensor.cuisine_entree_salon_batterie
+                    name: Entrée salon
+                    hide_state: false
+                    vertical: false
+                  - type: tile
+                    entity: sensor.cuisine_entee_salle_a_manger_batterie
+                    name: Entrée Salle à manger
+                    hide_state: false
+                    vertical: false
+                columns: 2
+              - square: false
+                type: grid
+                cards:
+                  - type: tile
+                    entity: sensor.temperature_cuisine_battery
+                    name: Capteur
+                    hide_state: false
+                    vertical: false
+                  - type: tile
+                    entity: sensor.temperature_cuisine_linkquality
+                    name: Capteur
+                    hide_state: false
+                    vertical: false
+                  - type: tile
+                    entity: sensor.temperature_cuisine_last_seen
+                    name: Capteur
+                columns: 3
+              - square: false
+                type: grid
+                cards:
+                  - graph: line
+                    type: sensor
+                    entity: sensor.temperature_cuisine_temperature
+                    detail: 1
+                    name: Cuisine
+                  - graph: line
+                    type: sensor
+                    entity: sensor.temperature_cuisine_humidity
+                    detail: 1
+                    name: Cuisine
+                columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#google-home-cuisine'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - type: custom:mini-media-player
+            entity: media_player.cuisine
+            artwork: full-cover
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#sdb-enfants'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - square: false
+            type: grid
+            cards:
+              - type: heading
+                icon: ''
+                heading: 🛁 Salle de bain enfants
+                heading_style: title
+                badges: []
+                tap_action:
+                  action: none
+              - type: custom:bubble-card
+                card_type: button
+                button_type: switch
+                entity: light.salle_de_bain_enfants
+                tap_action:
+                  action: toggle
+                show_icon: true
+                scrolling_effect: true
+                show_state: true
+                show_attribute: true
+                attribute: brightness
+                sub_button:
+                  - entity: light.hue_color_spot_sdb_1
+                    name: S1
+                    show_name: true
+                    icon: mdi:lightbulb-spot
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.hue_color_spot_sdb_2
+                    icon: mdi:lightbulb-spot
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                    show_name: true
+                    name: S2
+                  - entity: light.hue_color_spot_sdb_3
+                    name: S3
+                    show_name: true
+                    icon: mdi:lightbulb-spot
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.hue_color_spot_sdb_4
+                    name: S4
+                    show_name: true
+                    icon: mdi:lightbulb-spot
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                name: Tout
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_last_changed: false
+                slider_live_update: false
+                show_name: true
+                card_layout: large
+                icon: mdi:power
+                button_action:
+                  tap_action:
+                    action: more-info
+                  hold_action:
+                    action: toggle
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: entity
+                    entity: scene.salle_de_bain_enfants_bain_mougnoute
+                    icon_color: indigo
+                    tap_action:
+                      action: perform-action
+                      perform_action: automation.trigger
+                      data:
+                        skip_condition: true
+                      target:
+                        entity_id: automation.bain_manel
+                    icon: mdi:palette
+                    content_info: name
+                    name: Bain Manel 👧
+                    use_entity_picture: false
+            columns: 1
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.salle_de_bain_enfants_batterie
+                name: Entrée
+                hide_state: false
+                vertical: false
+              - type: tile
+                entity: sensor.temperature_adulte_battery
+                name: Entrée
+                hide_state: false
+                vertical: false
+              - type: tile
+                entity: sensor.temperature_sdb_enfants_linkquality
+                name: Entrée
+                hide_state: false
+                vertical: false
+          - type: tile
+            entity: sensor.temperature_sdb_enfants_last_seen
+            name: Capteur
+          - square: false
+            type: grid
+            cards:
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_sdb_enfants_temperature
+                detail: 1
+                name: SDB enfants
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_sdb_enfants_humidity
+                detail: 1
+                name: SDB enfants
+            columns: 2
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:food-fork-drink
+                icon_color: ''
+                primary: Salle à manger
+                secondary: ''
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#salle-a-manger'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.salle_a_manger
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.salle_a_manger
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: -8px;
+                    }
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: phu:rooms-balcony
+                icon_color: ''
+                primary: Palier
+                secondary: ''
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#palier'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.palier_etage
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.palier_etage
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: -8px;
+                    }
+        columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#salle-a-manger'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - square: false
+            type: grid
+            cards:
+              - type: heading
+                icon: ''
+                heading: 🍝 Salle à manger
+                heading_style: title
+                badges: []
+              - type: custom:bubble-card
+                card_type: button
+                button_type: slider
+                entity: light.salle_a_manger
+                tap_action:
+                  action: toggle
+                show_icon: true
+                scrolling_effect: true
+                show_state: true
+                show_attribute: true
+                attribute: brightness
+                sub_button:
+                  - entity: light.spot_1_salle_a_manger
+                    icon: mdi:lightbulb-spot
+                    name: S1
+                    show_name: true
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.spot_5_salle_a_manger
+                    icon: mdi:lightbulb-spot
+                    name: S5
+                    show_name: true
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.spot_2_salle_a_manger
+                    icon: mdi:lightbulb-spot
+                    name: S2
+                    show_name: true
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.spot_6_salle_a_manger
+                    icon: mdi:lightbulb-spot
+                    name: S6
+                    show_name: true
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.spot_3_salle_a_manger
+                    icon: mdi:lightbulb-spot
+                    name: S3
+                    show_name: true
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.spot_7_salle_a_manger
+                    icon: mdi:lightbulb-spot
+                    name: S7
+                    show_name: true
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.spot_4_salle_a_manger
+                    icon: mdi:lightbulb-spot
+                    name: S4
+                    show_name: true
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.spot_8_salle_a_manger
+                    icon: mdi:lightbulb-spot
+                    name: S8
+                    show_name: true
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                name: Tout
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_last_changed: false
+                slider_live_update: false
+                show_name: true
+                card_layout: large-2-rows
+                icon: mdi:power
+            columns: 1
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#palier'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
           - type: heading
             icon: ''
             heading: 🪑 Palier
             heading_style: title
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.palier_etage
-                color: state
-                icon: ''
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.hue_tap_dial_palier_etage_batterie
-                color: state
+            badges: []
+            tap_action:
+              action: none
           - type: custom:bubble-card
             card_type: button
-            button_type: slider
+            button_type: switch
             tap_action:
               action: toggle
             show_icon: true
@@ -954,254 +3405,838 @@ sections:
             show_last_changed: false
             slider_live_update: false
             show_name: true
-            card_layout: normal
+            card_layout: large
             entity: light.palier_etage
             icon: mdi:power
-        columns: 1
-      - square: false
-        type: grid
-        cards:
-          - type: heading
-            icon: ''
-            heading: 🛌🏼 Chambre adultes
-            heading_style: title
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.chambre_adultes
-                color: state
+            button_action:
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.hue_tap_dial_palier_etage_batterie
+                name: Palier Tap Dial
                 icon: ''
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.chambre_adulte_entee_batterie
-                color: state
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.chambre_adulte_lit_batterie
-                color: state
-          - type: custom:bubble-card
-            card_type: button
-            button_type: slider
-            entity: light.chambre_adultes
-            tap_action:
-              action: toggle
-            show_icon: true
-            scrolling_effect: true
-            show_state: true
-            show_attribute: true
-            attribute: brightness
-            sub_button:
-              - name: Plafonnier
-                show_name: true
-                icon: mdi:light-recessed
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                show_background: true
-                entity: light.plafonnier_chambre_adultes
-            name: Tout
-            double_tap_action:
-              action: more-info
-            hold_action:
-              action: more-info
-            show_last_changed: false
-            slider_live_update: false
-            show_name: true
-            card_layout: normal
-            icon: mdi:power
-        columns: 1
+            columns: 2
+  - type: grid
+    cards:
       - square: false
         type: grid
         cards:
-          - type: heading
-            icon: ''
-            heading: 🚿  Salle de bain adultes
-            heading_style: title
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: true
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:bed-king
+                icon_color: ''
+                primary: Chambre adultes
+                secondary: >-
+                  🌡️ {{ states("sensor.temperature_adulte_temperature") }}°C |
+                  💧 {{
+                    states("sensor.temperature_adulte_humidity") }} %
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#chambre-adultes'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.chambre_adultes
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.chambre_adultes
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: 10px;
+                    }
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:shower-head
+                icon_color: ''
+                primary: Sdb adultes
+                secondary: >-
+                  🌡️ {{ states("sensor.temperature_adulte_temperature") }}°C |
+                  💧 {{
+                    states("sensor.temperature_adulte_humidity") }} %
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#sdb-adultes'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
                 entity: light.salle_de_bain_adultes
-                color: state
-                icon: mdi:lightbulb-spot
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.salle_de_bain_adultes_batterie
-                color: state
-          - type: custom:bubble-card
-            card_type: button
-            button_type: slider
-            tap_action:
-              action: toggle
-            show_icon: true
-            scrolling_effect: true
-            show_state: true
-            show_attribute: true
-            attribute: brightness
-            sub_button:
-              - name: Douche
-                show_name: true
-                icon: mdi:lightbulb-spot
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                entity: light.spot_douche_sdb_adultes
-              - name: Vasque
-                show_name: true
-                icon: mdi:lightbulb-spot
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                entity: light.spot_vasque_sdb_adulte
-            name: Tout
-            double_tap_action:
-              action: more-info
-            hold_action:
-              action: more-info
-            show_last_changed: false
-            slider_live_update: false
-            show_name: true
-            card_layout: normal
-            entity: light.salle_de_bain_adultes
-            icon: mdi:power
-          - type: custom:bubble-card
-            card_type: separator
-        columns: 1
-      - square: false
-        type: grid
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.salle_de_bain_adultes
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: 10px;
+                    }
+        columns: 2
+      - type: vertical-stack
         cards:
-          - type: heading
-            icon: ''
-            heading: 😽  Chambre Lina
-            heading_style: title
-            badges:
-              - type: entity
-                entity: light.chambre_de_lina
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.chevet_lina_batterie
-                color: state
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: sensor.chambre_lina_entree_batterie
-                color: state
           - type: custom:bubble-card
-            card_type: media-player
-            entity: media_player.hub_lina
-            show_icon: true
-            show_name: true
-            scrolling_effect: true
-            hide:
-              play_pause_button: false
-            tap_action:
-              action: toggle
-            double_tap_action:
-              action: more-info
-            hold_action:
-              action: more-info
-            cover_background: true
-          - type: custom:bubble-card
-            card_type: button
-            button_type: slider
-            tap_action:
-              action: toggle
-            show_icon: true
-            scrolling_effect: true
+            card_type: pop-up
+            hash: '#chambre-adultes'
+            show_header: false
+            name: ''
             show_state: true
-            show_attribute: true
-            attribute: brightness
-            sub_button:
-              - name: Plafonnier
-                show_name: true
-                icon: mdi:ceiling-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                entity: light.plafonnier_lina
-              - entity: light.lit_lina
-                name: Lit
-                show_name: true
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-              - entity: light.lampe_de_chevet_lina
-                show_name: true
-                name: Chevet
-                icon: mdi:floor-lamp
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-            name: Tout
-            double_tap_action:
-              action: more-info
-            hold_action:
-              action: more-info
-            show_last_changed: false
-            slider_live_update: false
-            show_name: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
             card_layout: normal
-            entity: light.chambre_de_lina
-            icon: mdi:power
-        columns: 1
-      - square: false
-        type: grid
-        card_mod:
-          style: |
-            ha-card {
-              margin-bottom: 40px;
-            }
-        cards:
           - square: false
             type: grid
             cards:
               - type: heading
                 icon: ''
-                heading: 🧸  Chambre Manel
+                heading: 🛌🏼 Chambre adultes
                 heading_style: title
-                badges:
-                  - type: entity
-                    entity: light.chambre_manel
+                badges: []
+                tap_action:
+                  action: none
+              - type: custom:bubble-card
+                card_type: button
+                button_type: switch
+                entity: light.chambre_adultes
+                tap_action:
+                  action: toggle
+                show_icon: true
+                scrolling_effect: true
+                show_state: true
+                show_attribute: true
+                attribute: brightness
+                sub_button:
+                  - name: Plafonnier
+                    show_name: true
+                    icon: mdi:light-recessed
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                    show_background: true
+                    entity: light.plafonnier_chambre_adultes
+                name: Tout
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_last_changed: false
+                slider_live_update: false
+                show_name: true
+                card_layout: large
+                icon: mdi:power
+                button_action:
+                  tap_action:
+                    action: more-info
+                  hold_action:
+                    action: toggle
             columns: 1
           - square: false
             type: grid
             cards:
               - type: tile
-                entity: light.prise_chevet_manel
-                icon: mdi:floor-lamp
-                name: Chevet
+                entity: sensor.chambre_adulte_entee_batterie
+                name: Entrée
+              - type: tile
+                entity: sensor.chambre_adulte_lit_batterie
+                name: Lit
+              - type: tile
+                entity: sensor.temperature_adulte_battery
+                name: Capteur
+            columns: 3
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.temperature_adulte_linkquality
+                name: Capteur
+              - type: tile
+                entity: sensor.temperature_adulte_last_seen
+                name: Capteur
+            columns: 2
+          - square: false
+            type: grid
+            cards:
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_adulte_temperature
+                detail: 1
+                name: Chambre adultes
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_adulte_humidity
+                detail: 1
+                name: Chambre adultes
+            columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#sdb-adultes'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - square: false
+            type: grid
+            cards:
+              - type: heading
+                icon: ''
+                heading: 🚿  Salle de bain adultes
+                heading_style: title
+                badges: []
+                tap_action:
+                  action: none
+              - type: custom:bubble-card
+                card_type: button
+                button_type: switch
                 tap_action:
                   action: toggle
-                icon_tap_action:
+                show_icon: true
+                scrolling_effect: true
+                show_state: true
+                show_attribute: true
+                attribute: brightness
+                sub_button:
+                  - name: Douche
+                    show_name: true
+                    icon: mdi:lightbulb-spot
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                    entity: light.spot_douche_sdb_adultes
+                  - name: Vasque
+                    show_name: true
+                    icon: mdi:lightbulb-spot
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                    entity: light.spot_vasque_sdb_adulte
+                name: Tout
+                double_tap_action:
                   action: more-info
                 hold_action:
                   action: more-info
+                show_last_changed: false
+                slider_live_update: false
+                show_name: true
+                card_layout: large
+                entity: light.salle_de_bain_adultes
+                icon: mdi:power
+                button_action:
+                  tap_action:
+                    action: more-info
+            columns: 1
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.salle_de_bain_adultes_batterie
+                name: Entrée
+              - type: tile
+                entity: sensor.temperature_adulte_battery
+                name: Capteur
+              - type: tile
+                entity: sensor.temperature_adulte_linkquality
+                name: Capteur
+          - type: tile
+            entity: sensor.temperature_adulte_last_seen
+            name: Capteur
+          - square: false
+            type: grid
+            cards:
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_adulte_temperature
+                detail: 1
+                name: Sdb adultes
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_adulte_humidity
+                detail: 1
+                name: Sdb adultes
             columns: 2
-        columns: 1
   - type: grid
-    cards: []
-icon: mdi:home
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:bed
+                icon_color: ''
+                primary: Chambre Lina
+                secondary: >-
+                  🌡️ {{ states("sensor.temperature_lina_temperature") }}°C | 💧
+                  {{
+                    states("sensor.temperature_lina_humidity") }} %
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#chambre-lina'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.chambre_de_lina
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.chambre_de_lina
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                  - type: template
+                    entity: light.lampe_de_chevet_lina
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:floor-lamp
+                      {% else %}
+                       mdi:floor-lamp-outline
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                  - type: template
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#hub-lina'
+                    hold_action:
+                      action: toggle
+                    entity: media_player.hub_lina
+                    icon: |
+                      {% if is_state(entity, 'on') %} 
+                        mdi:speaker
+                      {% elif is_state(entity, 'off') %} 
+                        mdi:speaker-off
+                      {% elif is_state(entity, 'idle') %} 
+                        mdi:speaker-wireless
+                      {% elif is_state(entity, 'playing') %} 
+                        mdi:play-circle
+                      {% elif is_state(entity, 'paused') %} 
+                        mdi:pause-circle
+                      {% endif %}
+                    icon_color: |
+                      {% if is_state(entity, 'on') %} 
+                        white
+                      {% elif is_state(entity, 'off') %} 
+                        red
+                      {% elif is_state(entity, 'idle') %} 
+                        orange
+                      {% elif is_state(entity, 'playing') %} 
+                        green
+                      {% elif is_state(entity, 'paused') %} 
+                        orange
+                      {% endif %}
+                    double_tap_action:
+                      action: toggle
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: 10px;
+                    }
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: phu:rooms-kids-bed-room
+                icon_color: ''
+                primary: Chambre Manel
+                secondary: >-
+                  🌡️ {{ states("sensor.temperature_manel_temperature") }}°C |
+                  💧 {{
+                    states("sensor.temperature_manel_humidity") }} %
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#chambre-manel'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.chambre_manel
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.chambre_manel
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                  - type: template
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#camera-manel'
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                    entity: sensor.chambre_manel_status
+                    icon: mdi:webcam
+                    icon_color: green
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding: 10px !important;
+                      margin-top: 10px;
+                    }
+        columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#chambre-lina'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: true
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: false
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+            sub_button: []
+          - square: false
+            type: grid
+            cards:
+              - type: heading
+                icon: ''
+                heading: 😽  Chambre Lina
+                heading_style: title
+                badges: []
+                tap_action:
+                  action: none
+              - type: custom:bubble-card
+                card_type: media-player
+                entity: media_player.hub_lina
+                show_icon: true
+                show_name: true
+                scrolling_effect: true
+                hide:
+                  play_pause_button: false
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                cover_background: true
+                card_layout: large
+              - type: custom:bubble-card
+                card_type: button
+                button_type: switch
+                tap_action:
+                  action: toggle
+                show_icon: true
+                scrolling_effect: true
+                show_state: true
+                show_attribute: true
+                attribute: brightness
+                sub_button:
+                  - name: Plafonnier
+                    show_name: true
+                    icon: mdi:ceiling-light
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                    entity: light.plafonnier_lina
+                  - entity: light.lit_lina
+                    name: Lit
+                    show_name: true
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                  - entity: light.lampe_de_chevet_lina
+                    show_name: true
+                    name: Chevet
+                    icon: mdi:floor-lamp
+                    tap_action:
+                      action: toggle
+                    double_tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                name: Tout
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_last_changed: false
+                slider_live_update: false
+                show_name: true
+                card_layout: large
+                entity: light.chambre_de_lina
+                icon: mdi:power
+                button_action:
+                  tap_action:
+                    action: more-info
+                  hold_action:
+                    action: toggle
+            columns: 1
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.chambre_lina_entree_batterie
+                name: Entrée
+              - type: tile
+                entity: sensor.chevet_lina_batterie
+                name: Chevet
+              - type: tile
+                entity: sensor.temperature_lina_battery
+                name: Capteur
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.temperature_lina_linkquality
+                name: Capteur
+              - type: tile
+                entity: sensor.temperature_lina_last_seen
+                name: Capteur
+            columns: 2
+          - square: false
+            type: grid
+            cards:
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_lina_temperature
+                detail: 1
+                name: Chambre Lina
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_lina_humidity
+                detail: 1
+                name: Chambre Lina
+            columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#hub-lina'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - type: custom:mini-media-player
+            entity: media_player.hub_lina
+            artwork: full-cover
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#chambre-manel'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - square: false
+            type: grid
+            cards:
+              - square: false
+                type: grid
+                cards:
+                  - type: heading
+                    icon: ''
+                    heading: 🧸  Chambre Manel
+                    heading_style: title
+                    badges: []
+                    tap_action:
+                      action: none
+                columns: 1
+              - square: false
+                type: grid
+                cards:
+                  - type: custom:bubble-card
+                    card_type: button
+                    entity: light.prise_chevet_manel
+                    name: Chevet
+                    show_state: true
+                    icon: mdi:floor-lamp
+                    show_last_changed: false
+                    tap_action:
+                      action: toggle
+                    card_layout: large
+                  - type: tile
+                    name: Capteur
+                    entity: sensor.temperature_manel_battery
+                columns: 2
+            columns: 1
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                name: Capteur
+                entity: sensor.temperature_manel_linkquality
+              - type: tile
+                name: Capteur
+                entity: sensor.temperature_manel_last_seen
+            columns: 2
+          - square: false
+            type: grid
+            cards:
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_manel_temperature
+                detail: 1
+                name: Chambre Manel
+              - graph: line
+                type: sensor
+                entity: sensor.temperature_manel_humidity
+                detail: 1
+                name: Chambre Manel
+            columns: 2
+          - type: custom:webrtc-camera
+            url: >-
+              rtsp://
+            mode: webrtc,webrtc/tcp,mse,hls,mjpeg
+            media: video,audio
+            muted: true
+            shortcuts:
+              name: Record
+              icon: mdi:record-circle-outline
+              service: switch.toggle
+              service_data:
+                entity_id: switch.camera_record
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#camera-manel'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - type: custom:webrtc-camera
+            url: >-
+              rtsp://
+            mode: webrtc,webrtc/tcp,mse,hls,mjpeg
+            media: video,audio
+            muted: true
+            shortcuts:
+              name: Record
+              icon: mdi:record-circle-outline
+              service: switch.toggle
+              service_data:
+                entity_id: switch.camera_record
+  - type: grid
+    cards:
+      - type: custom:mushroom-vacuum-card
+        entity: vacuum.super_vv
+        icon_animation: true
+        fill_container: true
+        commands:
+          - on_off
+          - start_pause
+          - stop
+          - locate
+          - clean_spot
+          - return_home
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/aspi
+        grid_options:
+          columns: full
+        layout: horizontal
+badges: []
+type: sections
+max_columns: 1
+theme: Mushroom
 cards: []
+icon: mdi:home
