@@ -1,0 +1,48 @@
+# VERNIR AJOUTER DANS LE FICHIER DE CONFIGURATION DU TABLEAU DE BORD MOBILE
+# COMPRENANT LE NAVBAR + LE MODE KIOSK
+
+#kiosk_mode
+kiosk_mode:
+  mobile_settings:
+    hide_header: true
+    ignore_entity_settings: true
+    custom_width: 768
+
+#navbar
+navbar-templates:
+  main_nav_bar:
+    routes:
+      - url: /mobile-v3/home
+        icon: fas:house
+        label: Home
+      - url: /mobile-v3/monitoring
+        icon: mdi:monitor-dashboard
+        label: Monitoring
+      - url: /mobile-v3/aspi
+        icon: mdi:robot-vacuum
+        label: Aspi
+      - url: /mobile-v3/batteries
+        icon: mdi:battery
+        label: Batteries
+      - url: /mobile-v3/etat-telephone
+        icon: mdi:cellphone-arrow-down
+        label: Etat Téléphones
+      - icon: mdi:dots-horizontal
+        label: More
+        tap_action:
+          action: open-popup
+          haptic: true
+        popup:
+          - icon: mdi:cog
+            url: /config/dashboard
+          - icon: mdi:map
+            url: /map
+          - icon: mdi:zigbee
+            url: /45df7312_zigbee2mqtt/ingress
+          - icon: mdi:power
+            tap_action:
+              action: call-service
+              service: homeassistant.restart
+              service_data: {}
+              confirmation:
+                text: Êtes-vous sûr de vouloir redémarrer Home Assistant ?

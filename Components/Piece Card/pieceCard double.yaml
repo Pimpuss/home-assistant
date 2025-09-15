@@ -1,0 +1,222 @@
+square: false
+type: grid
+cards:
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:mushroom-template-card
+        icon: mdi:sofa
+        icon_color: ''
+        primary: Salon
+        secondary: |-
+          🌡️ {{ states("sensor.temperature_cuisine_temperature") }}°C | 💧 {{
+            states("sensor.temperature_cuisine_humidity") }} %
+        tap_action:
+          action: navigate
+          navigation_path: '#salon'
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+        badge_icon: |-
+          {% if is_state(entity, 'on') %} 
+            mdi:lightbulb-alert
+          {% endif %}
+        badge_color: |-
+          {% if is_state(entity, 'on') %} 
+            red
+          {% endif %}
+        entity: light.salon_colonnes_sofa
+        features_position: bottom
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: template
+            entity: light.salon
+            icon: |-
+              {% if is_state(entity, 'on') %} 
+               phu:ceiling-buratto-two
+              {% else %}
+               phu:ceiling-buratto-two-off
+              {% endif %}
+            icon_color: |-
+              {% if is_state(entity, 'on') %} 
+               orange
+              {% else %}
+               grey
+              {% endif %}
+            tap_action:
+              action: toggle
+            hold_action:
+              action: more-info
+            double_tap_action:
+              action: more-info
+          - type: template
+            entity: light.colonne_salon_colonne_tv
+            icon: |-
+              {% if is_state(entity, 'on') %} 
+               mdi:lightbulb-group
+              {% else %}
+               mdi:lightbulb-group-off
+              {% endif %}
+            icon_color: |-
+              {% if is_state(entity, 'on') %} 
+               orange
+              {% else %}
+               grey
+              {% endif %}
+            tap_action:
+              action: toggle
+            hold_action:
+              action: more-info
+            double_tap_action:
+              action: more-info
+          - type: template
+            entity: media_player.tv_salon_2
+            icon: |
+              {% if is_state(entity, 'on') %} 
+                mdi:television
+              {% else %} 
+                mdi:television-off
+              {% endif %}
+            icon_color: |
+              {% if is_state(entity, 'on') %} 
+               green
+              {% else %} 
+                red
+              {% endif %}
+            tap_action:
+              action: navigate
+              navigation_path: '#tv-salon'
+            hold_action:
+              action: toggle
+            double_tap_action:
+              action: toggle
+          - type: template
+            tap_action:
+              action: navigate
+              navigation_path: '#camera-salon'
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+            icon: mdi:webcam
+            icon_color: green
+        alignment: end
+        card_mod:
+          style: |
+            ha-card {
+              padding-top: 20px;
+              margin-top: -8px;
+              padding-bottom: 8px;
+              padding-left: 3px;
+              padding-right: 8px;
+            }
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:mushroom-template-card
+        icon: mdi:sofa
+        icon_color: ''
+        primary: Salon
+        secondary: |-
+          🌡️ {{ states("sensor.temperature_cuisine_temperature") }}°C | 💧 {{
+            states("sensor.temperature_cuisine_humidity") }} %
+        tap_action:
+          action: navigate
+          navigation_path: '#salon'
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+        badge_icon: |-
+          {% if is_state(entity, 'on') %} 
+            mdi:lightbulb-alert
+          {% endif %}
+        badge_color: |-
+          {% if is_state(entity, 'on') %} 
+            red
+          {% endif %}
+        entity: light.salon_colonnes_sofa
+        features_position: bottom
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: template
+            entity: light.salon
+            icon: |-
+              {% if is_state(entity, 'on') %} 
+               phu:ceiling-buratto-two
+              {% else %}
+               phu:ceiling-buratto-two-off
+              {% endif %}
+            icon_color: |-
+              {% if is_state(entity, 'on') %} 
+               orange
+              {% else %}
+               grey
+              {% endif %}
+            tap_action:
+              action: toggle
+            hold_action:
+              action: more-info
+            double_tap_action:
+              action: more-info
+          - type: template
+            entity: light.colonne_salon_colonne_tv
+            icon: |-
+              {% if is_state(entity, 'on') %} 
+               mdi:lightbulb-group
+              {% else %}
+               mdi:lightbulb-group-off
+              {% endif %}
+            icon_color: |-
+              {% if is_state(entity, 'on') %} 
+               orange
+              {% else %}
+               grey
+              {% endif %}
+            tap_action:
+              action: toggle
+            hold_action:
+              action: more-info
+            double_tap_action:
+              action: more-info
+          - type: template
+            entity: media_player.tv_salon_2
+            icon: |
+              {% if is_state(entity, 'on') %} 
+                mdi:television
+              {% else %} 
+                mdi:television-off
+              {% endif %}
+            icon_color: |
+              {% if is_state(entity, 'on') %} 
+               green
+              {% else %} 
+                red
+              {% endif %}
+            tap_action:
+              action: navigate
+              navigation_path: '#tv-salon'
+            hold_action:
+              action: toggle
+            double_tap_action:
+              action: toggle
+          - type: template
+            tap_action:
+              action: navigate
+              navigation_path: '#camera-salon'
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+            icon: mdi:webcam
+            icon_color: green
+        alignment: end
+        card_mod:
+          style: |
+            ha-card {
+              padding-top: 20px;
+              margin-top: -8px;
+              padding-bottom: 8px;
+              padding-left: 3px;
+              padding-right: 8px;
+            }
+columns: 2

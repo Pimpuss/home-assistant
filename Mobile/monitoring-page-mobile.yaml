@@ -1,6 +1,5 @@
 type: sections
 max_columns: 1
-title: Monitoring
 path: monitoring
 icon: mdi:monitor-dashboard
 sections:
@@ -11,8 +10,8 @@ sections:
         cards:
           - type: custom:bubble-card
             card_type: separator
-            icon: mdi:certificate-outline
-            name: Https certificat
+            icon: mdi:database
+            name: Sauvegardes
             sub_button: []
             card_layout: normal
             card_mod:
@@ -24,37 +23,37 @@ sections:
             type: grid
             cards:
               - type: tile
-                entity: sensor.pimpus_freeboxos_fr_expiration_du_certificat
+                entity: sensor.backup_derniere_sauvegarde_automatique_reussie
                 vertical: false
                 hide_state: false
-                name: Expiration du certificat
-              - type: custom:mushroom-template-card
-                primary: 'Nombre de jour(s) restant :'
-                secondary: >-
-                  {{ states('sensor.nombre_de_jour_restant_certificat') }}
-                  jour(s)
-                icon: mdi:calendar
-                entity: sensor.nombre_de_jour_restant_certificat
-                icon_color: >
-                  {% set jours_restants =
-                  states('sensor.nombre_de_jour_restant_certificat') | float %}
-
-                  {% if jours_restants <= 10 %}
-                    red
-                  {% elif jours_restants <= 20 %}
-                    orange
-                  {% else %}
-                    green
-                  {% endif %}
-                multiline_secondary: false
-                tap_action:
-                  action: more-info
-                hold_action:
-                  action: none
-                double_tap_action:
-                  action: none
+                features_position: bottom
+                name: Dernière sauvegarde
+                color: green
+              - type: tile
+                vertical: false
+                hide_state: false
+                features_position: bottom
+                name: Prochaine sauvegarde
+                color: accent
+                entity: sensor.backup_prochaine_sauvegarde_automatique_programmee
+              - type: tile
+                vertical: false
+                hide_state: false
+                features_position: bottom
+                name: Sauvegarde automatique
+                color: blue
+                entity: event.backup_sauvegarde_automatique
+              - type: tile
+                vertical: false
+                hide_state: false
+                features_position: bottom
+                name: Gestionnaire sauvegarde
+                color: purple
+                entity: sensor.backup_etat_du_gestionnaire_de_sauvegarde
             columns: 2
         columns: 1
+  - type: grid
+    cards:
       - square: false
         type: grid
         cards:
@@ -80,12 +79,20 @@ sections:
         type: grid
         cards:
           - type: custom:mushroom-template-card
-            primary: "{{ states('sensor.disque1_free_space') }} %"
-            secondary: Disque 1
+            primary: >-
+              {{ (100 - (states('sensor.disque4_free_space') | float)) |
+              round(1) }} %
+            secondary: 'Disque 1 '
             icon: mdi:harddisk
             entity: sensor.disque1_free_space
-            icon_color: |2+
-                    {% set free_space = states('sensor.disque1_free_space') | float %}
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+            color: |2+
+                    {% set free_space = states('sensor.disque4_free_space') | float %}
                 {% if free_space < 10 %}
                   red
                 {% elif free_space < 50 %}
@@ -94,14 +101,9 @@ sections:
                   green
                 {% endif %}
 
-            tap_action:
-              action: more-info
-            hold_action:
-              action: none
-            double_tap_action:
-              action: none
+            features_position: bottom
           - type: custom:mushroom-template-card
-            primary: "{{ states('sensor.disque2_free_space') }} %"
+            primary: "{{ 100 - (states('sensor.disque2_free_space') | float) }} %"
             secondary: 'Disque 2 '
             icon: mdi:harddisk
             entity: sensor.disque2_free_space
@@ -123,7 +125,7 @@ sections:
             double_tap_action:
               action: none
           - type: custom:mushroom-template-card
-            primary: "{{ states('sensor.disque3_free_space') }} %"
+            primary: "{{ 100 - (states('sensor.disque3_free_space') | float) }} %"
             secondary: 'Disque 3 '
             icon: mdi:harddisk
             entity: sensor.disque3_free_space
@@ -147,13 +149,15 @@ sections:
       - square: false
         type: grid
         cards:
-          - type: custom:mushroom-template-card
-            primary: "{{ states('sensor.disque4_free_space') }} %"
+          - type: custom:mushroom-legacy-template-card
+            primary: >-
+              {{ (100 - (states('sensor.disque1_free_space') | float)) |
+              round(1) }} %
             secondary: Disque 4
             icon: mdi:harddisk
-            entity: sensor.disque4_free_space
+            entity: sensor.disque3_free_space
             icon_color: |2+
-                    {% set free_space = states('sensor.disque4_free_space') | float %}
+                    {% set free_space = states('sensor.disque1_free_space') | float %}
                 {% if free_space < 10 %}
                   red
                 {% elif free_space < 50 %}
@@ -169,12 +173,14 @@ sections:
             double_tap_action:
               action: none
           - type: custom:mushroom-template-card
-            primary: "{{ states('sensor.freebox_free_space_2') }} %"
+            primary: >-
+              {{ (100 - (states('sensor.freebox_free_space') | float)) |
+              round(1) }} %
             secondary: Disque Externe
             icon: mdi:harddisk
-            entity: sensor.freebox_free_space_2
+            entity: sensor.disque4_free_space
             icon_color: |2+
-                    {% set free_space = states('sensor.freebox_free_space_2') | float %}
+                    {% set free_space = states('sensor.freebox_free_space') | float %}
                 {% if free_space < 10 %}
                   red
                 {% elif free_space < 50 %}
@@ -198,7 +204,13 @@ sections:
             secondary: Boxe Temp 1
             icon: mdi:thermometer
             entity: sensor.freebox_temperature_1
-            icon_color: |
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+            color: |
               {% set temp = states('sensor.freebox_temperature_1') | float %}
               {% if temp <= 50 %}
                 green
@@ -207,12 +219,7 @@ sections:
               {% else %}
                 red
               {% endif %}
-            tap_action:
-              action: more-info
-            hold_action:
-              action: none
-            double_tap_action:
-              action: none
+            features_position: bottom
           - type: custom:mushroom-template-card
             primary: "{{ states('sensor.freebox_temperature_2')}} °C"
             secondary: Boxe Temp 2
@@ -324,82 +331,6 @@ sections:
             double_tap_action:
               action: none
         columns: 3
-      - square: false
-        type: grid
-        cards:
-          - type: custom:bubble-card
-            card_type: separator
-            icon: mdi:printer
-            name: Imprimante HP
-            sub_button: []
-            card_layout: normal
-            card_mod:
-              style: |
-                .bubble-separator.separator-container {
-                  margin-top: 20px;
-                }
-          - type: custom:mushroom-chips-card
-            chips:
-              - type: entity
-                entity: sensor.hp_envy_photo_6200_series
-              - type: entity
-                entity: sensor.hp_envy_photo_6200_series_black_ink
-                icon_color: black
-                name: Noir
-                content_info: state
-              - type: entity
-                entity: sensor.hp_envy_photo_6200_series_tri_color_ink
-                icon_color: white
-                content_info: state
-            alignment: center
-        columns: 1
-      - square: false
-        type: grid
-        cards:
-          - type: custom:bubble-card
-            card_type: separator
-            icon: mdi:zigbee
-            name: Zig2MQTT
-            sub_button:
-              - entity: button.zigbee2mqtt_bridge_restart
-                icon: mdi:restart-alert
-                show_last_changed: true
-                show_name: true
-                name: Restart
-                tap_action:
-                  action: toggle
-            card_layout: normal
-            card_mod:
-              style: |
-                .bubble-separator.separator-container {
-                  margin-top: 20px;
-                }
-          - type: custom:mushroom-chips-card
-            chips:
-              - type: entity
-                entity: binary_sensor.zigbee2mqtt_bridge_connection_state
-                icon_color: green
-              - type: entity
-                entity: sensor.zigbee2mqtt_bridge_coordinator_version
-                icon_color: accent
-              - type: entity
-                entity: sensor.zigbee2mqtt_bridge_version
-                icon_color: red
-                icon: mdi:package
-              - type: entity
-                entity: switch.zigbee2mqtt_bridge_permit_join
-                tap_action:
-                  action: toggle
-                use_entity_picture: false
-                icon_color: light-green
-                hold_action:
-                  action: none
-                double_tap_action:
-                  action: none
-                name: Apparaige
-                content_info: name
-            alignment: center
-        columns: 1
   - type: grid
     cards:
       - square: false
@@ -574,144 +505,6 @@ sections:
                   z-index: 1;
                   --ha-card-border-width: 0;
                 }
-      - square: false
-        type: grid
-        cards:
-          - type: custom:bubble-card
-            card_type: separator
-            icon: mdi:table-network
-            name: Tailscale
-            sub_button: []
-            card_layout: normal
-            card_mod:
-              style: |
-                .bubble-separator.separator-container {
-                  margin-top: 20px;
-                }
-          - type: custom:bubble-card
-            card_type: button
-            button_type: state
-            entity: sensor.plex_vu_pour_la_derniere_fois_2
-            name: Plex
-            icon: mdi:plex
-            show_last_changed: true
-            show_attribute: false
-            attribute: friendly_name
-            card_layout: large-2-rows
-            sub_button:
-              - entity: sensor.plex_adresse_ip_2
-                show_state: true
-                icon: mdi:ip
-                show_name: false
-                show_last_changed: false
-                show_attribute: false
-                attribute: friendly_name
-                tap_action:
-                  action: more-info
-              - entity: binary_sensor.plex_client_2
-                show_name: false
-                show_state: true
-            tap_action:
-              action: none
-            button_action:
-              tap_action:
-                action: url
-                url_path:
-          - type: custom:bubble-card
-            card_type: button
-            button_type: state
-            entity: sensor.pc_milhan_maison_vu_pour_la_derniere_fois
-            name: Pc Maison
-            icon: mdi:desktop-tower-monitor
-            show_last_changed: true
-            show_attribute: false
-            attribute: friendly_name
-            card_layout: large-2-rows
-            sub_button:
-              - entity: sensor.pc_milhan_maison_adresse_ip
-                show_state: true
-                icon: mdi:ip
-                show_name: false
-                show_last_changed: false
-                show_attribute: false
-                attribute: friendly_name
-                tap_action:
-                  action: more-info
-              - entity: binary_sensor.pc_milhan_maison_client
-                show_name: false
-                show_state: true
-                show_last_changed: false
-                show_attribute: false
-            tap_action:
-              action: none
-            button_action:
-              tap_action:
-                action: url
-                url_path:
-          - type: custom:bubble-card
-            card_type: button
-            button_type: state
-            entity: sensor.google_pixel_9_pro_xl_vu_pour_la_derniere_fois
-            name: Pixel 9Pro
-            icon: mdi:cellphone
-            show_last_changed: true
-            show_attribute: false
-            attribute: friendly_name
-            card_layout: large-2-rows
-            sub_button:
-              - show_state: true
-                icon: mdi:ip
-                show_name: false
-                show_last_changed: false
-                show_attribute: false
-                attribute: friendly_name
-                tap_action:
-                  action: more-info
-                entity: sensor.google_pixel_9_pro_xl_adresse_ip
-              - entity: binary_sensor.google_pixel_9_pro_xl_client
-                show_name: false
-                show_state: true
-                show_last_changed: false
-                show_attribute: false
-            tap_action:
-              action: none
-            button_action:
-              tap_action:
-                action: url
-                url_path:
-          - type: custom:bubble-card
-            card_type: button
-            button_type: state
-            entity: sensor.portable_pimpus_vu_pour_la_derniere_fois
-            name: Portable
-            icon: mdi:laptop
-            show_last_changed: true
-            show_attribute: false
-            attribute: friendly_name
-            card_layout: large-2-rows
-            sub_button:
-              - show_state: true
-                icon: mdi:ip
-                show_name: false
-                show_last_changed: false
-                show_attribute: false
-                attribute: friendly_name
-                tap_action:
-                  action: more-info
-                entity: sensor.portable_pimpus_adresse_ip
-              - entity: binary_sensor.portable_pimpus_client
-                show_name: false
-                show_state: true
-                show_last_changed: false
-                show_attribute: false
-                show_background: true
-            tap_action:
-              action: none
-            button_action:
-              tap_action:
-                action: url
-                url_path:
-        columns: 1
   - type: grid
     cards:
       - square: false
@@ -750,7 +543,7 @@ sections:
               - type: custom:stack-in-card
                 cards:
                   - type: custom:mushroom-entity-card
-                    entity: sensor.qemu_haos14_1_100_cpu_used
+                    entity: sensor.system_monitor_utilisation_du_processeur
                     primary_info: state
                     secondary_info: name
                     name: Charge Processeur (2 Core)
@@ -764,7 +557,7 @@ sections:
                         }
                   - type: custom:mini-graph-card
                     entities:
-                      - entity: sensor.qemu_haos14_1_100_cpu_used
+                      - entity: sensor.system_monitor_utilisation_du_processeur
                         color: '#ED4C67'
                     hours_to_show: 8
                     points_per_hour: 20
@@ -797,7 +590,7 @@ sections:
           - type: custom:stack-in-card
             cards:
               - type: custom:mushroom-entity-card
-                entity: sensor.qemu_haos14_1_100_memory_used_percentage
+                entity: sensor.system_monitor_utilisation_de_la_memoire
                 primary_info: state
                 secondary_info: name
                 name: Charge RAM (6 Gio)
@@ -811,7 +604,7 @@ sections:
                     }
               - type: custom:mini-graph-card
                 entities:
-                  - entity: sensor.qemu_haos14_1_100_memory_used_percentage
+                  - entity: sensor.system_monitor_utilisation_de_la_memoire
                     color: '#badc58'
                 hours_to_show: 8
                 points_per_hour: 20
@@ -915,6 +708,8 @@ sections:
                       --ha-card-border-width: 0;
                     }
         columns: 2
+  - type: grid
+    cards:
       - square: false
         type: grid
         cards:
@@ -930,8 +725,6 @@ sections:
                 show_state: false
                 show_attribute: false
                 show_last_changed: true
-                tap_action:
-                  action: toggle
             card_layout: normal
             card_mod:
               style: |
@@ -943,7 +736,7 @@ sections:
               - type: custom:mushroom-chips-card
                 chips:
                   - type: entity
-                    entity: update.plex_media_server_plex_maison
+                    entity: update.plex_maison_update
                   - type: entity
                     entity: sensor.plex_maison
                     icon: mdi:play
@@ -961,30 +754,253 @@ sections:
                     icon_color: yellow
                   - type: entity
                     entity: sensor.plex_maison_library_series_tv_enfants
+                    icon: fas:tv
                     icon_color: yellow
-          - type: media-control
-            name: Pc Pimpus
-            entity: media_player.plex_plex_for_windows_desktop_4sh86lu
-            visibility:
-              - condition: state
-                entity: media_player.plex_plex_for_windows_desktop_4sh86lu
-                state_not: unavailable
-          - type: media-control
-            name: Pixel Pimpus
-            entity: media_player.plex_plex_for_android_mobile_am60_series
-            visibility:
-              - condition: state
-                entity: media_player.plex_plex_for_android_mobile_am60_series
-                state_not: unavailable
-          - type: media-control
-            name: Tv Salon
-            entity: >-
-              media_player.plex_lina_manel_plex_for_android_tv_chromecast_google_tv
-            visibility:
-              - condition: state
-                entity: >-
-                  media_player.plex_lina_manel_plex_for_android_tv_chromecast_google_tv
-                state_not: unavailable
         columns: 1
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:printer
+            name: Imprimante HP
+            sub_button: []
+            card_layout: normal
+            card_mod:
+              style: |
+                .bubble-separator.separator-container {
+                  margin-top: 20px;
+                }
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: entity
+                entity: sensor.hp_envy_photo_6200_series
+              - type: entity
+                entity: sensor.hp_envy_photo_6200_series_black_ink
+                icon_color: black
+                name: Noir
+                content_info: state
+              - type: entity
+                entity: sensor.hp_envy_photo_6200_series_tri_color_ink
+                icon_color: white
+                content_info: state
+            alignment: center
+        columns: 1
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:zigbee
+            name: Zig2MQTT
+            sub_button:
+              - entity: button.zigbee2mqtt_bridge_restart
+                icon: mdi:restart-alert
+                show_last_changed: true
+                show_name: true
+                name: Restart
+                tap_action:
+                  action: toggle
+            card_layout: normal
+            card_mod:
+              style: |
+                .bubble-separator.separator-container {
+                  margin-top: 20px;
+                }
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: entity
+                entity: binary_sensor.zigbee2mqtt_bridge_connection_state
+                icon_color: green
+              - type: entity
+                entity: sensor.zigbee2mqtt_bridge_coordinator_version
+                icon_color: accent
+              - type: entity
+                entity: sensor.zigbee2mqtt_bridge_version
+                icon_color: red
+                icon: mdi:package
+              - type: entity
+                entity: switch.zigbee2mqtt_bridge_permit_join
+                tap_action:
+                  action: toggle
+                use_entity_picture: false
+                icon_color: light-green
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+                name: Apparaige
+                content_info: name
+            alignment: center
+        columns: 1
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            icon: mdi:table-network
+            name: Tailscale
+            sub_button: []
+            card_layout: normal
+            card_mod:
+              style: |
+                .bubble-separator.separator-container {
+                  margin-top: 20px;
+                }
+          - type: custom:bubble-card
+            card_type: button
+            button_type: state
+            entity: sensor.pc_maison_vu_pour_la_derniere_fois
+            name: Pc Maison
+            icon: mdi:desktop-tower-monitor
+            show_last_changed: true
+            show_attribute: false
+            attribute: friendly_name
+            card_layout: large-2-rows
+            sub_button:
+              - show_state: true
+                icon: mdi:ip
+                show_name: false
+                show_last_changed: false
+                show_attribute: false
+                attribute: friendly_name
+                tap_action:
+                  action: more-info
+                entity: sensor.pc_maison_adresse_ip
+              - entity: binary_sensor.pc_maison_client
+                show_name: false
+                show_state: true
+                show_last_changed: false
+                show_attribute: false
+            tap_action:
+              action: none
+            button_action:
+              tap_action:
+                action: url
+                url_path: <personnal_url>
+          - type: custom:bubble-card
+            card_type: button
+            button_type: state
+            entity: sensor.google_pixel_9_pro_xl_vu_pour_la_derniere_fois
+            name: Pixel 9Pro
+            icon: mdi:cellphone
+            show_last_changed: true
+            show_attribute: false
+            attribute: friendly_name
+            card_layout: large-2-rows
+            sub_button:
+              - show_state: true
+                icon: mdi:ip
+                show_name: false
+                show_last_changed: false
+                show_attribute: false
+                attribute: friendly_name
+                tap_action:
+                  action: more-info
+                entity: sensor.google_pixel_9_pro_xl_adresse_ip
+              - entity: binary_sensor.google_pixel_9_pro_xl_client
+                show_name: false
+                show_state: true
+                show_last_changed: false
+                show_attribute: false
+            tap_action:
+              action: none
+            button_action:
+              tap_action:
+                action: url
+                url_path: <personnal_url>
+          - type: custom:bubble-card
+            card_type: button
+            button_type: state
+            name: Portable
+            icon: mdi:laptop
+            show_last_changed: true
+            show_attribute: false
+            attribute: friendly_name
+            card_layout: large-2-rows
+            sub_button:
+              - show_state: true
+                icon: mdi:ip
+                show_name: false
+                show_last_changed: false
+                show_attribute: false
+                attribute: friendly_name
+                tap_action:
+                  action: more-info
+                entity: sensor.portable_pimpus_adresse_ip_2
+              - show_name: false
+                show_state: true
+                show_last_changed: false
+                show_attribute: false
+                show_background: true
+                entity: binary_sensor.portable_pimpus_client_2
+            tap_action:
+              action: none
+            button_action:
+              tap_action:
+                action: url
+                url_path: <personnal_url>
+            entity: sensor.portable_pimpus_vu_pour_la_derniere_fois_2
+          - type: custom:bubble-card
+            card_type: button
+            button_type: state
+            name: Plex
+            icon: mdi:plex
+            show_last_changed: true
+            show_attribute: false
+            attribute: friendly_name
+            card_layout: large-2-rows
+            sub_button:
+              - show_state: true
+                icon: mdi:ip
+                show_name: false
+                show_last_changed: false
+                show_attribute: false
+                attribute: friendly_name
+                tap_action:
+                  action: more-info
+                entity: sensor.plex_adresse_ip_3
+              - show_name: false
+                show_state: true
+                show_last_changed: false
+                show_attribute: false
+                show_background: true
+                entity: binary_sensor.plex_client_3
+            tap_action:
+              action: none
+            button_action:
+              tap_action:
+                action: url
+                url_path: <personnal_url>
+            entity: sensor.plex_vu_pour_la_derniere_fois_3
+        columns: 1
+  - type: grid
+    cards:
+      - type: custom:navbar-card
+        template: main_nav_bar
+        media_player:
+          entity: media_player.cuisine
+          album_cover_background: true
+        haptic:
+          url: true
+          tap_action: true
+          hold_action: true
+          double_tap_action: true
+        layout:
+          auto_padding:
+            enabled: true
+            mobile_px: null
+        styles: |2-
+           .navbar-card {
+              width: 95%;
+              border-radius: 10px;
+            }
 badges: []
 cards: []
+subview: true

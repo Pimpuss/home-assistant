@@ -12,6 +12,8 @@ sections:
             entity: person.alison
             icon_type: entity-picture
             name: Alison
+            tap_action:
+              action: more-info
           - type: custom:mushroom-person-card
             entity: person.lina
             icon_type: entity-picture
@@ -50,29 +52,101 @@ sections:
         tap_action:
           action: navigate
           navigation_path: '#meteo'
-      - type: custom:atomic-calendar-revive
-        dateFormat: DD/MM/YYYY
-        enableModeChange: true
+      - type: custom:calendar-card-pro
         entities:
-          - entity: calendar.famille
-            name: Famille
-            showMultiDay: true
-            blocklist: pou
-          - entity: calendar.milhan_verschelle_gmail_com
-            name: Milhan.verschelle@gmail.com
-        showDeclined: true
-        showDate: true
-        showAllDayEvents: true
-        compactMode: false
-        offsetHeaderDate: true
-        calShowDescription: false
-        disableCalEventLink: false
-        dimFinishedEvents: false
-        showLocation: false
-        titleLength: 0
-        firstDayOfWeek: 0
-        maxDaysToShow: 5
-        defaultMode: Event
+          - entity: calendar.famille_2
+            color: '#E3683E'
+            blocklist: Poubelle|Lina
+        days_to_show: 5
+        max_events_to_show: 5
+        show_past_events: false
+        language: fr
+        time_24h: true
+        show_end_time: true
+        show_month: true
+        show_location: true
+        remove_location_country: true
+        additional_card_spacing: 0px
+        vertical_line_width: 0px
+        vertical_line_color: '#baf1ff'
+        horizontal_line_width: 0.5px
+        horizontal_line_color: '#fff'
+        title_font_size: 26px
+        weekday_font_size: 14px
+        day_font_size: 32px
+        month_font_size: 12px
+        event_font_size: 14px
+        time_font_size: 12px
+        location_font_size: 12px
+        time_location_icon_size: 14px
+        day_color: '#fff'
+        month_color: '#0AA6F3'
+        time_color: '#baf1ff'
+        location_color: '#ecb208'
+        refresh_interval: 15
+        tap_action:
+          action: navigate
+          navigation_path: '#calendar'
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#calendar'
+            show_header: true
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 7px
+            width_desktop: 540px
+            button_type: state
+            entity: sensor.date_complete
+            show_last_changed: false
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: none
+              double_tap_action:
+                action: none
+              hold_action:
+                action: none
+            tap_action:
+              action: none
+            double_tap_action:
+              action: none
+            hold_action:
+              action: none
+          - type: custom:calendar-card-pro
+            entities:
+              - entity: calendar.famille_2
+                color: '#E3683E'
+            days_to_show: 15
+            max_events_to_show: 10
+            show_past_events: false
+            language: fr
+            time_24h: true
+            show_end_time: true
+            show_month: true
+            show_location: true
+            remove_location_country: true
+            additional_card_spacing: 0px
+            vertical_line_width: 0px
+            vertical_line_color: '#baf1ff'
+            horizontal_line_width: 0.5px
+            horizontal_line_color: '#fff'
+            title_font_size: 26px
+            weekday_font_size: 14px
+            day_font_size: 32px
+            month_font_size: 12px
+            event_font_size: 14px
+            time_font_size: 12px
+            location_font_size: 12px
+            time_location_icon_size: 14px
+            day_color: '#fff'
+            month_color: '#0AA6F3'
+            time_color: '#baf1ff'
+            location_color: '#ecb208'
+            refresh_interval: 15
       - type: custom:mushroom-vacuum-card
         entity: vacuum.super_vv
         icon_animation: true
@@ -545,13 +619,191 @@ sections:
                 entity: sensor.toilettes_batterie
                 name: Entrée
             columns: 1
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading_style: title
+            heading: 🗄️ Cellier
+            badges: []
+            tap_action:
+              action: navigate
+              navigation_path: '#cellier'
+          - type: custom:bubble-card
+            card_type: button
+            button_type: switch
+            entity: light.on_off_light_cellier
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button: []
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            icon: mdi:power
+        columns: 1
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#cellier'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: switch.prise_cumulus
+                name: Prise cmulus
+                features_position: bottom
+                vertical: false
+                tap_action:
+                  action: toggle
+              - type: tile
+                entity: sensor.prise_cumulus_linkquality
+                name: Prise cumulus
+                features_position: bottom
+                vertical: false
+            columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading_style: title
+            heading: 🛠️ Garage
+            badges: []
+            tap_action:
+              action: navigate
+              navigation_path: '#garage'
+          - type: custom:bubble-card
+            card_type: button
+            button_type: switch
+            entity: light.on_off_light_garage
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button: []
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            icon: mdi:power
+        columns: 1
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#garage'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+      - square: false
+        type: grid
+        cards:
+          - type: heading
+            icon: ''
+            heading_style: title
+            heading: 🌳 Jardin
+            badges: []
+            tap_action:
+              action: navigate
+              navigation_path: '#jardin'
+          - type: custom:bubble-card
+            card_type: button
+            button_type: switch
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button: []
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: normal
+            icon: mdi:power
+            entity: light.switch_jardin
+        columns: 1
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#jardin'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
   - type: grid
     cards:
       - type: custom:bubble-card
         card_type: separator
         name: 📍 RDC
         sub_button:
-          - entity: light.sejour
+          - entity: light.salon_cuisine
             show_name: true
             show_state: false
             show_last_changed: false
@@ -570,10 +822,13 @@ sections:
             heading: 🖥️ Bureau Pimpus
             heading_style: title
             badges: []
+            tap_action:
+              action: navigate
+              navigation_path: '#bureau-pimpus'
           - type: custom:bubble-card
             card_type: button
             button_type: slider
-            entity: light.lightstrip_bureau
+            entity: light.bureau
             tap_action:
               action: toggle
             show_icon: true
@@ -581,8 +836,21 @@ sections:
             show_state: true
             show_attribute: true
             sub_button:
+              - entity: light.spots_bureau_pimpus
+                icon: phu:bulbs-spot
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_name: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                name: Spots
               - name: Ruban
-                show_name: true
+                show_name: false
                 icon: mdi:led-strip-variant
                 tap_action:
                   action: toggle
@@ -591,6 +859,40 @@ sections:
                 hold_action:
                   action: more-info
                 show_background: true
+                entity: light.hue_lightstrip_bureau_pimpus
+              - entity: light.hue_play_bureau_pimpus
+                name: Hue Play
+                icon: phu:play-bar-two
+                double_tap_action:
+                  action: more-info
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                show_name: false
+              - entity: light.on_off_plug_etagere_bureau_pimpus
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                show_icon: true
+                show_background: true
+                icon: mdi:bookshelf
+                name: Étagère
+                show_name: false
+                show_last_changed: false
+                show_state: false
+              - entity: light.keylights_bureau
+                icon: phu:elgato-key-light
+                name: Keylights
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
             name: Tout
             double_tap_action:
               action: more-info
@@ -599,11 +901,40 @@ sections:
             show_last_changed: false
             slider_live_update: true
             show_name: true
-            card_layout: normal
+            card_layout: large
             icon: mdi:power
             force_icon: false
             attribute: brightness
         columns: 1
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#bureau-pimpus'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.hue_dimmer_switch_bureau_pimpus_batterie
+                name: Entrée
+                features_position: bottom
+                vertical: false
+            columns: 3
       - square: false
         type: grid
         cards:
@@ -620,25 +951,6 @@ sections:
               action: navigate
               navigation_path: '#salon'
           - type: custom:bubble-card
-            card_type: media-player
-            entity: media_player.tv_salon_2
-            show_icon: true
-            show_name: true
-            scrolling_effect: true
-            hide:
-              play_pause_button: false
-            tap_action:
-              action: navigate
-              navigation_path: '#tv-salon'
-            double_tap_action:
-              action: toggle
-            hold_action:
-              action: toggle
-            cover_background: true
-            icon: mdi:television
-            show_attribute: true
-            attribute: media_content_type
-          - type: custom:bubble-card
             card_type: button
             button_type: slider
             entity: light.salon
@@ -651,9 +963,19 @@ sections:
             attribute: brightness
             sub_button:
               - entity: light.hue_centris_ceiling_1
-                name: ''
+                name: Centre
                 show_name: true
                 icon: mdi:light-recessed
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_centris_spot_3
+                name: Spot3
+                show_name: true
+                icon: mdi:track-light
                 tap_action:
                   action: toggle
                 double_tap_action:
@@ -669,29 +991,9 @@ sections:
                 hold_action:
                   action: more-info
                 show_name: true
-                name: S1
-              - entity: light.hue_centris_spot_2
-                name: S2
-                show_name: true
-                icon: mdi:track-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-              - entity: light.hue_centris_spot_3
-                name: S3
-                show_name: true
-                icon: mdi:track-light
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
+                name: Spot1
               - entity: light.hue_centris_spot_4
-                name: S4
+                name: Spot4
                 show_name: true
                 icon: mdi:track-light
                 tap_action:
@@ -700,7 +1002,17 @@ sections:
                   action: more-info
                 hold_action:
                   action: more-info
-            name: Tout
+              - entity: light.hue_centris_spot_2
+                name: Spot2
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Spots
             double_tap_action:
               action: more-info
             hold_action:
@@ -708,7 +1020,7 @@ sections:
             show_last_changed: false
             slider_live_update: false
             show_name: true
-            card_layout: normal
+            card_layout: large-2-rows
             icon: mdi:power
           - type: custom:bubble-card
             card_type: button
@@ -721,7 +1033,56 @@ sections:
             show_attribute: true
             attribute: brightness
             sub_button:
-              - name: Ruban
+              - entity: light.colonne_tv
+                name: TV
+                show_name: true
+                icon: phu:dome-light
+                show_state: false
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.colonne_salon
+                name: Salon
+                show_name: true
+                icon: phu:dome-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Colonnes TV - Salon
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+            entity: light.colonne_salon_colonne_tv
+            styles: ''
+            button_action:
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - name: Ruban Tv
                 show_name: true
                 icon: mdi:led-strip-variant
                 tap_action:
@@ -731,7 +1092,7 @@ sections:
                 hold_action:
                   action: more-info
                 show_background: true
-            name: Tout
+            name: Sofa
             double_tap_action:
               action: more-info
             hold_action:
@@ -806,25 +1167,63 @@ sections:
                 detail: 1
                 name: Salon
             columns: 2
+          - type: custom:webrtc-camera
+            url: >-
+              rtsp://<!-- Sensitive Information Removed -->
+            mode: webrtc,webrtc/tcp,mse,hls,mjpeg
+            media: video,audio
+            muted: true
+            shortcuts:
+              name: Record
+              icon: mdi:record-circle-outline
+              service: switch.toggle
+              service_data:
+                entity_id: switch.camera_record
       - type: vertical-stack
         cards:
           - type: custom:bubble-card
             card_type: pop-up
             hash: '#tv-salon'
-            show_header: false
+            show_header: true
             name: ''
             show_state: true
-            show_name: false
+            show_name: true
             force_icon: false
             margin: 0px
             width_desktop: 540px
-            show_last_changed: true
+            show_last_changed: false
             show_attribute: false
             hide_backdrop: true
             card_layout: normal
+            scrolling_effect: false
+            show_icon: true
+            icon: mdi:television-ambient-light
+            sub_button:
+              - entity: switch.tv_philips_ambilight_hue
+                icon: mdi:television-ambient-light
+                show_background: true
+                state_background: true
+                name: Hue
+                show_name: true
+                show_state: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+            button_type: switch
+            entity: light.tv_philips_ambilight
+            use_accent_color: false
+            tap_action:
+              action: toggle
+            double_tap_action:
+              action: none
+            hold_action:
+              action: none
           - type: vertical-stack
             cards:
-              - square: false
+              - square: true
                 columns: 3
                 type: grid
                 cards:
@@ -1302,7 +1701,7 @@ sections:
           - square: false
             type: grid
             cards:
-              - square: false
+              - square: true
                 type: grid
                 cards:
                   - show_name: false
@@ -1756,7 +2155,7 @@ sections:
                     icon: mdi:close
                     tap_action:
                       action: navigate
-                      navigation_path: /lovelace
+                      navigation_path: /lovelace/0
                     hold_action:
                       action: none
                     card_mod:
@@ -2186,11 +2585,13 @@ sections:
                 name: Salon
                 hide_state: false
                 vertical: false
+                features_position: bottom
               - type: tile
                 entity: sensor.cuisine_entee_salle_a_manger_batterie
-                name: Entrée Salle à manger
+                name: Entrée SàM
                 hide_state: false
                 vertical: false
+                features_position: bottom
               - type: tile
                 entity: sensor.temperature_cuisine_battery
                 name: Capteur
@@ -3021,6 +3422,16 @@ sections:
             cards:
               - type: custom:bubble-card
                 card_type: button
+                name: Plafonnier
+                show_state: true
+                icon: mdi:light-recessed
+                show_last_changed: false
+                tap_action:
+                  action: toggle
+                button_type: switch
+                entity: light.on_off_light_plafonnier_manel
+              - type: custom:bubble-card
+                card_type: button
                 entity: light.prise_chevet_manel
                 name: Chevet
                 show_state: true
@@ -3028,9 +3439,13 @@ sections:
                 show_last_changed: false
                 tap_action:
                   action: toggle
+            columns: 2
+          - square: false
+            type: grid
+            cards:
               - type: custom:bubble-card
                 card_type: button
-                entity: binary_sensor.chambre_manel_online
+                entity: binary_sensor.camera_manel_online
                 name: Camera
                 show_state: true
                 icon: mdi:webcam
@@ -3051,6 +3466,9 @@ sections:
                   action: none
                 hold_action:
                   action: none
+                show_attribute: false
+                force_icon: false
+                styles: ''
             columns: 2
         columns: 1
       - type: vertical-stack
@@ -3077,15 +3495,28 @@ sections:
             type: grid
             cards:
               - type: tile
+                entity: sensor.chambre_manel_entree_batterie
+                name: Entrée
+                features_position: bottom
+                vertical: false
+              - type: tile
                 entity: sensor.temperature_manel_battery
                 name: Capteur
+                features_position: bottom
+                vertical: false
+            columns: 2
+          - square: false
+            type: grid
+            cards:
               - type: tile
                 entity: sensor.temperature_manel_linkquality
                 name: Capteur
+                features_position: bottom
+                vertical: false
               - type: tile
                 entity: sensor.temperature_adulte_last_seen
                 name: Capteur
-            columns: 3
+            columns: 2
           - square: false
             type: grid
             cards:
@@ -3122,7 +3553,7 @@ sections:
             card_layout: normal
           - type: custom:webrtc-camera
             url: >-
-              rtsp://
+              rtsp:<!-- Sensitive Information Removed -->
             mode: webrtc,webrtc/tcp,mse,hls,mjpeg
             media: video,audio
             muted: true
@@ -3172,20 +3603,6 @@ badges:
     tap_action:
       action: more-info
     entity: sensor.poubelle_grise
-  - type: custom:mushroom-template-badge
-    content: "{{ states('sensor.nombre_de_jour_restant_certificat') }} jour(s)"
-    icon: mdi:calendar
-    color: >-
-      {% if states('sensor.nombre_de_jour_restant_certificat') <= '10' %} red
-
-      {% elif states('sensor.nombre_de_jour_restant_certificat') <= '20' %}
-      orange
-
-      {% else %} green {% endif %}
-    label: Certificats
-    tap_action:
-      action: more-info
-    entity: sensor.nombre_de_jour_restant_certificat
   - type: custom:mushroom-chips-card
     chips:
       - type: entity

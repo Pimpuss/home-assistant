@@ -1,7 +1,6 @@
 type: sections
 path: aspi
 max_columns: 1
-title: aspi
 icon: mdi:robot-vacuum
 sections:
   - type: grid
@@ -118,4 +117,26 @@ sections:
         name: Reset Capteur
         color: green
         show_entity_picture: false
+  - type: grid
+    cards:
+      - type: custom:navbar-card
+        template: main_nav_bar
+        media_player:
+          entity: media_player.cuisine
+          album_cover_background: true
+        haptic:
+          url: true
+          tap_action: true
+          hold_action: true
+          double_tap_action: true
+        layout:
+          auto_padding:
+            enabled: true
+            mobile_px: null
+        styles: |2-
+           .navbar-card {
+              width: 95%;
+              border-radius: 10px;
+            }
 cards: []
+subview: true

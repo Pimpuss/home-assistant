@@ -1,4 +1,3 @@
-title: Maison
 sections:
   - type: grid
     cards:
@@ -22,25 +21,10 @@ sections:
               {% if states('sensor.poubelle_grise') == 'Aujourd\'hui' %} red
               {% elif states('sensor.poubelle_grise') == 'Demain' %} orange
               {% else %} green {% endif %}
-            label: Poubelle Jaune
+            label: Poubelle Grise
             tap_action:
               action: more-info
             entity: sensor.poubelle_grise
-          - type: custom:mushroom-template-badge
-            content: "{{ states('sensor.nombre_de_jour_restant_certificat') }} jour(s)"
-            icon: mdi:calendar
-            color: >-
-              {% if states('sensor.nombre_de_jour_restant_certificat') <= '10'
-              %} red
-
-              {% elif states('sensor.nombre_de_jour_restant_certificat') <= '20'
-              %} orange
-
-              {% else %} green {% endif %}
-            label: Certificats
-            tap_action:
-              action: more-info
-            entity: sensor.nombre_de_jour_restant_certificat
       - type: custom:mushroom-chips-card
         chips:
           - type: template
@@ -364,9 +348,9 @@ sections:
                     entity: light.porte_d_entree
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       mdi:lightbulb-spot
                       {% else %}
-                       mdi:lightbulb-group-off
+                       mdi:lightbulb-spot-off
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -384,8 +368,11 @@ sections:
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
-                      margin-top: -8px;
+                    padding-top: 10px;
+                    margin-top: -8px;
+                    padding-bottom: 10px;
+                    padding-left: 3px;
+                    padding-right: 8px;
                     }
           - type: custom:vertical-stack-in-card
             cards:
@@ -433,12 +420,53 @@ sections:
                       action: more-info
                     double_tap_action:
                       action: more-info
+                  - type: template
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: none
+                    entity: light.plafonnier_hall_d_entree
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:ceiling-light
+                      {% else %}
+                       mdi:ceiling-light-outline
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                  - type: template
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    entity: light.ruban_hall_d_entree
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:led-strip-variant
+                      {% else %}
+                       mdi:led-strip-variant-off
+                      {% endif %}
                 alignment: end
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
-                      margin-top: -8px;
+                    padding-top: 10px;
+                    margin-top: -8px;
+                    padding-bottom: 10px;
+                    padding-left: 3px;
+                    padding-right: 8px;
                     }
         columns: 2
       - type: vertical-stack
@@ -636,9 +664,9 @@ sections:
                     entity: light.escalier
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       mdi:lightbulb-spot
                       {% else %}
-                       mdi:lightbulb-group-off
+                       mdi:lightbulb-spot-off
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -656,8 +684,11 @@ sections:
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
+                      padding-top: 8px;
                       margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
           - type: custom:vertical-stack-in-card
             cards:
@@ -689,9 +720,9 @@ sections:
                     entity: light.toilettes
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       mdi:track-light
                       {% else %}
-                       mdi:lightbulb-group-off
+                         mdi:track-light-off
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -709,8 +740,11 @@ sections:
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
+                      padding-top: 8px;
                       margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
         columns: 2
       - type: vertical-stack
@@ -872,7 +906,6 @@ sections:
                   🌡️ {{ states("sensor.temperature_cuisine_temperature") }}°C |
                   💧 {{
                     states("sensor.temperature_cuisine_humidity") }} %
-                layout: horizontal
                 tap_action:
                   action: navigate
                   navigation_path: '#salon'
@@ -888,11 +921,32 @@ sections:
                   {% if is_state(entity, 'on') %} 
                     red
                   {% endif %}
-                entity: light.salon
+                entity: light.salon_colonnes_sofa
+                features_position: bottom
               - type: custom:mushroom-chips-card
                 chips:
                   - type: template
                     entity: light.salon
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       phu:ceiling-buratto-two
+                      {% else %}
+                       phu:ceiling-buratto-two-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                  - type: template
+                    entity: light.colonne_salon_colonne_tv
                     icon: |-
                       {% if is_state(entity, 'on') %} 
                        mdi:lightbulb-group
@@ -908,9 +962,9 @@ sections:
                     tap_action:
                       action: toggle
                     hold_action:
-                      action: none
+                      action: more-info
                     double_tap_action:
-                      action: none
+                      action: more-info
                   - type: template
                     entity: media_player.tv_salon_2
                     icon: |
@@ -934,25 +988,23 @@ sections:
                       action: toggle
                   - type: template
                     tap_action:
-                      action: perform-action
-                      perform_action: automation.trigger
-                      target:
-                        entity_id: automation.soiree_netflix
-                      data:
-                        skip_condition: true
+                      action: navigate
+                      navigation_path: '#camera-salon'
                     hold_action:
                       action: none
                     double_tap_action:
                       action: none
-                    entity: automation.soiree_netflix
-                    icon: mdi:netflix
-                    icon_color: red
+                    icon: mdi:webcam
+                    icon_color: green
                 alignment: end
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
-                      margin-top: 10px;
+                      padding-top: 20px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
           - type: custom:vertical-stack-in-card
             cards:
@@ -961,7 +1013,6 @@ sections:
                 icon_color: ''
                 primary: Bureau Pimpus
                 secondary: ''
-                layout: horizontal
                 tap_action:
                   action: navigate
                   navigation_path: '#bureau-pimpus'
@@ -977,16 +1028,37 @@ sections:
                   {% if is_state(entity, 'on') %} 
                     red
                   {% endif %}
-                entity: light.bureau_pimpus
+                entity: light.bureau
+                features_position: bottom
               - type: custom:mushroom-chips-card
                 chips:
                   - type: template
-                    entity: light.bureau_pimpus
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                    entity: light.spots_bureau_pimpus
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       mdi:lightbulb-spot
                       {% else %}
-                       mdi:lightbulb-group-off
+                       mdi:lightbulb-spot-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                  - type: template
+                    entity: light.hue_lightstrip_bureau_pimpus
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:led-strip-variant
+                      {% else %}
+                       mdi:led-strip-variant-off
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -1000,12 +1072,53 @@ sections:
                       action: more-info
                     double_tap_action:
                       action: more-info
+                  - type: template
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                    entity: light.hue_play_bureau_pimpus
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       phu:play-bar-two
+                      {% else %}
+                       phu:play-bar-two
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                  - type: template
+                    entity: light.bureau
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                        mdi:lightbulb-group
+                      {% else %}
+                       mdi:lightbulb-group-off
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
                 alignment: end
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
-                      margin-top: 10px;
+                      padding-top: 20px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
         columns: 2
       - type: vertical-stack
@@ -1028,20 +1141,123 @@ sections:
                 navigation_path: '#robert-graph'
             hide_backdrop: true
             card_layout: normal
+          - type: heading
+            icon: ''
+            heading: 🛋️ Salon
+            heading_style: title
+            badges: []
+            tap_action:
+              action: none
+          - type: custom:bubble-card
+            card_type: button
+            button_type: switch
+            entity: light.salon
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - entity: light.hue_centris_ceiling_1
+                name: ''
+                show_name: true
+                icon: mdi:light-recessed
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_centris_spot_1
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                show_name: true
+                name: S1
+              - entity: light.hue_centris_spot_2
+                name: S2
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_centris_spot_3
+                name: S3
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_centris_spot_4
+                name: S4
+                show_name: true
+                icon: mdi:track-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Plafonnier
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+            button_action:
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+          - type: custom:bubble-card
+            card_type: button
+            button_type: switch
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button: []
+            name: Meuble Tv
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+            button_action:
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+            entity: light.meuble_tv
           - square: false
             type: grid
             cards:
-              - type: heading
-                icon: ''
-                heading: 🛋️ Salon
-                heading_style: title
-                badges: []
-                tap_action:
-                  action: none
               - type: custom:bubble-card
                 card_type: button
-                button_type: switch
-                entity: light.salon
+                button_type: slider
                 tap_action:
                   action: toggle
                 show_icon: true
@@ -1049,58 +1265,8 @@ sections:
                 show_state: true
                 show_attribute: true
                 attribute: brightness
-                sub_button:
-                  - entity: light.hue_centris_ceiling_1
-                    name: ''
-                    show_name: true
-                    icon: mdi:light-recessed
-                    tap_action:
-                      action: toggle
-                    double_tap_action:
-                      action: more-info
-                    hold_action:
-                      action: more-info
-                  - entity: light.hue_centris_spot_1
-                    icon: mdi:track-light
-                    tap_action:
-                      action: toggle
-                    double_tap_action:
-                      action: more-info
-                    hold_action:
-                      action: more-info
-                    show_name: true
-                    name: S1
-                  - entity: light.hue_centris_spot_2
-                    name: S2
-                    show_name: true
-                    icon: mdi:track-light
-                    tap_action:
-                      action: toggle
-                    double_tap_action:
-                      action: more-info
-                    hold_action:
-                      action: more-info
-                  - entity: light.hue_centris_spot_3
-                    name: S3
-                    show_name: true
-                    icon: mdi:track-light
-                    tap_action:
-                      action: toggle
-                    double_tap_action:
-                      action: more-info
-                    hold_action:
-                      action: more-info
-                  - entity: light.hue_centris_spot_4
-                    name: S4
-                    show_name: true
-                    icon: mdi:track-light
-                    tap_action:
-                      action: toggle
-                    double_tap_action:
-                      action: more-info
-                    hold_action:
-                      action: more-info
-                name: Tout
+                sub_button: []
+                name: Colonne TV
                 double_tap_action:
                   action: more-info
                 hold_action:
@@ -1110,67 +1276,52 @@ sections:
                 show_name: true
                 card_layout: large
                 icon: mdi:power
-                button_action:
-                  tap_action:
-                    action: more-info
-                  hold_action:
-                    action: toggle
-              - type: custom:bubble-card
-                card_type: button
-                button_type: switch
-                tap_action:
-                  action: toggle
-                show_icon: true
-                scrolling_effect: true
-                show_state: true
-                show_attribute: true
-                attribute: brightness
-                sub_button:
-                  - name: Ruban
-                    show_name: true
-                    icon: mdi:led-strip-variant
-                    tap_action:
-                      action: toggle
-                    double_tap_action:
-                      action: more-info
-                    hold_action:
-                      action: more-info
-                    show_background: true
-                name: Tout
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                show_last_changed: false
-                slider_live_update: false
-                show_name: true
-                card_layout: large
-                icon: mdi:power
-                entity: light.sofa
                 styles: ''
                 button_action:
                   tap_action:
                     action: more-info
                   hold_action:
                     action: toggle
+                entity: light.dimmable_light_1
               - type: custom:bubble-card
-                card_type: media-player
-                entity: media_player.tv_salon_2
-                show_icon: true
-                show_name: true
-                scrolling_effect: true
-                hide:
-                  play_pause_button: false
+                card_type: button
+                button_type: slider
                 tap_action:
                   action: toggle
+                show_icon: true
+                scrolling_effect: true
+                show_state: true
+                show_attribute: true
+                attribute: brightness
+                sub_button: []
+                name: Colonne Salon
                 double_tap_action:
                   action: more-info
                 hold_action:
                   action: more-info
-                cover_background: true
-                icon: mdi:television
+                show_last_changed: false
+                slider_live_update: false
+                show_name: true
                 card_layout: large
-            columns: 1
+                icon: mdi:power
+                styles: ''
+                button_action:
+                  tap_action:
+                    action: more-info
+                  hold_action:
+                    action: toggle
+                entity: light.dimmable_light_1_2
+            columns: 2
+          - type: media-control
+            name: Tv Salon
+            entity: media_player.tv_salon
+            visibility:
+              - condition: state
+                entity: media_player.tv_salon
+                state_not: 'off'
+              - condition: state
+                entity: media_player.tv_salon
+                state_not: idle
           - square: false
             type: grid
             cards:
@@ -1179,24 +1330,26 @@ sections:
                 name: 'Entrée '
                 hide_state: false
                 vertical: false
-            columns: 1
-          - square: false
-            type: grid
-            cards:
+                features_position: bottom
               - type: tile
                 entity: sensor.temperature_cuisine_battery
                 name: Capteur
                 hide_state: false
                 vertical: false
+            columns: 2
+          - square: false
+            type: grid
+            cards:
               - type: tile
                 entity: sensor.temperature_cuisine_linkquality
                 name: Capteur
                 hide_state: false
                 vertical: false
+                features_position: bottom
               - type: tile
                 entity: sensor.temperature_cuisine_last_seen
                 name: Capteur
-            columns: 3
+            columns: 2
           - square: false
             type: grid
             cards:
@@ -1211,6 +1364,39 @@ sections:
                 detail: 1
                 name: Salon
             columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#camera-salon'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+            button_type: name
+          - type: custom:webrtc-camera
+            url: >-
+              rtsp://<personal_access_token>
+            mode: webrtc,webrtc/tcp,mse,hls,mjpeg
+            media: video,audio
+            muted: true
+            shortcuts:
+              name: Record
+              icon: mdi:record-circle-outline
+              service: switch.toggle
+              service_data:
+                entity_id: switch.camera_record
       - type: vertical-stack
         cards:
           - type: custom:bubble-card
@@ -2508,54 +2694,247 @@ sections:
                 navigation_path: '#robert-graph'
             hide_backdrop: true
             card_layout: normal
+          - type: heading
+            icon: ''
+            heading: 🖥️ Bureau Pimpus
+            heading_style: title
+            badges: []
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.hue_lightstrip_bureau_pimpus
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button: []
+            name: Ruban
+            double_tap_action:
+              action: toggle
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+            button_action:
+              double_tap_action:
+                action: toggle
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.hue_play_bureau_pimpus
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - entity: light.hue_play_1_2
+                name: Centre
+                icon: phu:play
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_play_1
+                name: Gauche
+                icon: phu:play
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Hue Play
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+            button_action:
+              double_tap_action:
+                action: toggle
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+            use_accent_color: false
+            force_icon: false
+          - type: custom:bubble-card
+            card_type: button
+            button_type: slider
+            entity: light.keylights_bureau
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - entity: light.hue_color_candle_1
+                name: Gauche
+                icon: phu:elgato-key-light
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_ambiance_candle_1
+                name: Droite
+                icon: phu:elgato-key-light
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Keylights
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+            button_action:
+              double_tap_action:
+                action: toggle
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+            use_accent_color: false
+            force_icon: false
+          - type: custom:bubble-card
+            card_type: button
+            button_type: switch
+            entity: light.spots_bureau_pimpus
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button:
+              - entity: light.hue_ambiance_spot_1
+                icon: mdi:lightbulb-spot
+                name: S1
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_ambiance_spot_5
+                tap_action:
+                  action: toggle
+                name: S2
+                icon: mdi:lightbulb-spot
+                show_name: true
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_ambiance_spot_3
+                name: S3
+                icon: mdi:lightbulb-spot
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_ambiance_spot_4
+                name: S4
+                icon: mdi:lightbulb-spot
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.hue_ambiance_spot_2
+                name: S5
+                icon: mdi:lightbulb-spot
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Spots
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+            button_action:
+              double_tap_action:
+                action: toggle
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+            use_accent_color: false
+            force_icon: false
+            card_mod:
+              style: |
+                .bubble-button-card-container.button-container {
+                height: 70px !important;
+                 }
           - square: false
             type: grid
             cards:
-              - type: heading
-                icon: ''
-                heading: 🖥️ Bureau Pimpus
-                heading_style: title
-                badges: []
               - type: custom:bubble-card
                 card_type: button
-                button_type: switch
-                entity: light.lightstrip_bureau
+                entity: light.on_off_plug_etagere_bureau_pimpus
+                name: Étagère
+                show_state: true
+                icon: mdi:bookshelf
+                show_last_changed: false
                 tap_action:
                   action: toggle
-                show_icon: true
-                scrolling_effect: true
-                show_state: true
-                show_attribute: true
-                attribute: brightness
-                sub_button:
-                  - name: Ruban
-                    show_name: true
-                    icon: phu:light-strip
-                    tap_action:
-                      action: toggle
-                    double_tap_action:
-                      action: more-info
-                    hold_action:
-                      action: more-info
-                    show_background: true
-                name: Tout
-                double_tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                show_last_changed: false
-                slider_live_update: false
-                show_name: true
                 card_layout: large
-                icon: mdi:power
-                button_action:
-                  double_tap_action:
-                    action: toggle
-                  tap_action:
-                    action: more-info
-                  hold_action:
-                    action: toggle
-            columns: 1
+              - type: tile
+                entity: sensor.hue_dimmer_switch_bureau_pimpus_batterie
+                name: Entrée
+                features_position: bottom
+                vertical: false
+            columns: 2
   - type: grid
     cards:
       - square: false
@@ -2564,7 +2943,7 @@ sections:
           - type: custom:vertical-stack-in-card
             cards:
               - type: custom:mushroom-template-card
-                icon: mdi:fridge
+                icon: mdi:chef-hat
                 icon_color: ''
                 primary: Cuisine
                 secondary: >-
@@ -2594,9 +2973,9 @@ sections:
                     entity: light.cuisine
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       phu:ceiling-buratto-two
                       {% else %}
-                       mdi:lightbulb-group-off
+                        phu:ceiling-buratto-two-off
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -2668,8 +3047,11 @@ sections:
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
-                      margin-top: 10px;
+                      padding-top: 20px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
           - type: custom:vertical-stack-in-card
             cards:
@@ -2704,9 +3086,9 @@ sections:
                     entity: light.salle_de_bain_enfants
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       mdi:lightbulb-spot
                       {% else %}
-                       mdi:lightbulb-group-off
+                       mdi:lightbulb-spot-off
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -2741,8 +3123,11 @@ sections:
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
-                      margin-top: 10px;
+                      padding-top: 20px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
         columns: 2
       - type: vertical-stack
@@ -2871,7 +3256,7 @@ sections:
                     vertical: false
                   - type: tile
                     entity: sensor.cuisine_entee_salle_a_manger_batterie
-                    name: Entrée Salle à manger
+                    name: Entrée SàM
                     hide_state: false
                     vertical: false
                 columns: 2
@@ -3053,17 +3438,22 @@ sections:
                 vertical: false
               - type: tile
                 entity: sensor.temperature_adulte_battery
-                name: Entrée
+                name: Capteur
+                hide_state: false
+                vertical: false
+            columns: 2
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                entity: sensor.temperature_sdb_enfants_linkquality
+                name: Capteur
                 hide_state: false
                 vertical: false
               - type: tile
-                entity: sensor.temperature_sdb_enfants_linkquality
-                name: Entrée
-                hide_state: false
-                vertical: false
-          - type: tile
-            entity: sensor.temperature_sdb_enfants_last_seen
-            name: Capteur
+                entity: sensor.temperature_sdb_enfants_last_seen
+                name: Capteur
+            columns: 2
           - square: false
             type: grid
             cards:
@@ -3113,9 +3503,9 @@ sections:
                     entity: light.salle_a_manger
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       mdi:lightbulb-spot
                       {% else %}
-                       mdi:lightbulb-group-off
+                       mdi:lightbulb-spot-off
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -3133,8 +3523,11 @@ sections:
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
+                      padding-top: 8px;
                       margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
           - type: custom:vertical-stack-in-card
             cards:
@@ -3186,8 +3579,11 @@ sections:
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
+                      padding-top: 8px;
                       margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
         columns: 2
       - type: vertical-stack
@@ -3459,9 +3855,9 @@ sections:
                     entity: light.chambre_adultes
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       mdi:ceiling-light
                       {% else %}
-                       mdi:lightbulb-group-off
+                       mdi:ceiling-light-outline
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -3479,8 +3875,11 @@ sections:
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
-                      margin-top: 10px;
+                      padding-top: 20px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
           - type: custom:vertical-stack-in-card
             cards:
@@ -3515,9 +3914,9 @@ sections:
                     entity: light.salle_de_bain_adultes
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       mdi:lightbulb-spot
                       {% else %}
-                       mdi:lightbulb-group-off
+                       mdi:lightbulb-spot-off
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -3535,8 +3934,11 @@ sections:
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
-                      margin-top: 10px;
+                      padding-top: 20px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
         columns: 2
       - type: vertical-stack
@@ -3730,12 +4132,17 @@ sections:
               - type: tile
                 entity: sensor.temperature_adulte_battery
                 name: Capteur
+            columns: 2
+          - square: false
+            type: grid
+            cards:
               - type: tile
-                entity: sensor.temperature_adulte_linkquality
                 name: Capteur
-          - type: tile
-            entity: sensor.temperature_adulte_last_seen
-            name: Capteur
+                entity: sensor.temperature_adulte_linkquality
+              - type: tile
+                entity: sensor.temperature_adulte_last_seen
+                name: Capteur
+            columns: 2
           - square: false
             type: grid
             cards:
@@ -3785,12 +4192,12 @@ sections:
               - type: custom:mushroom-chips-card
                 chips:
                   - type: template
-                    entity: light.chambre_de_lina
+                    entity: light.plafonnier_lina
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       mdi:ceiling-light
                       {% else %}
-                       mdi:lightbulb-group-off
+                       mdi:ceiling-light-outline
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -3861,8 +4268,11 @@ sections:
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
-                      margin-top: 10px;
+                      padding-top: 20px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
           - type: custom:vertical-stack-in-card
             cards:
@@ -3894,12 +4304,32 @@ sections:
               - type: custom:mushroom-chips-card
                 chips:
                   - type: template
-                    entity: light.chambre_manel
+                    entity: light.on_off_light_plafonnier_manel
                     icon: |-
                       {% if is_state(entity, 'on') %} 
-                       mdi:lightbulb-group
+                       mdi:ceiling-light
                       {% else %}
-                       mdi:lightbulb-group-off
+                         mdi:ceiling-light-outline
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                  - type: template
+                    entity: light.prise_chevet_manel
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:floor-lamp
+                      {% else %}
+                        mdi:floor-lamp-outline
                       {% endif %}
                     icon_color: |-
                       {% if is_state(entity, 'on') %} 
@@ -3921,15 +4351,18 @@ sections:
                       action: none
                     double_tap_action:
                       action: none
-                    entity: sensor.chambre_manel_status
+                    entity: binary_sensor.camera_manel_online
                     icon: mdi:webcam
                     icon_color: green
                 alignment: end
                 card_mod:
                   style: |
                     ha-card {
-                      padding: 10px !important;
-                      margin-top: 10px;
+                      padding-top: 20px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
                     }
         columns: 2
       - type: vertical-stack
@@ -3963,85 +4396,86 @@ sections:
                 badges: []
                 tap_action:
                   action: none
-              - type: custom:bubble-card
-                card_type: media-player
-                entity: media_player.hub_lina
-                show_icon: true
-                show_name: true
-                scrolling_effect: true
-                hide:
-                  play_pause_button: false
-                tap_action:
-                  action: toggle
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                cover_background: true
-                card_layout: large
-              - type: custom:bubble-card
-                card_type: button
-                button_type: switch
-                tap_action:
-                  action: toggle
-                show_icon: true
-                scrolling_effect: true
-                show_state: true
-                show_attribute: true
-                attribute: brightness
-                sub_button:
-                  - name: Plafonnier
-                    show_name: true
-                    icon: mdi:ceiling-light
-                    tap_action:
-                      action: toggle
-                    double_tap_action:
-                      action: more-info
-                    hold_action:
-                      action: more-info
-                    entity: light.plafonnier_lina
-                  - entity: light.lit_lina
-                    name: Lit
-                    show_name: true
-                    tap_action:
-                      action: toggle
-                    double_tap_action:
-                      action: more-info
-                    hold_action:
-                      action: more-info
-                  - entity: light.lampe_de_chevet_lina
-                    show_name: true
-                    name: Chevet
-                    icon: mdi:floor-lamp
-                    tap_action:
-                      action: toggle
-                    double_tap_action:
-                      action: more-info
-                    hold_action:
-                      action: more-info
-                name: Tout
-                double_tap_action:
-                  action: more-info
-                hold_action:
-                  action: more-info
-                show_last_changed: false
-                slider_live_update: false
-                show_name: true
-                card_layout: large
-                entity: light.chambre_de_lina
-                icon: mdi:power
-                button_action:
-                  tap_action:
-                    action: more-info
-                  hold_action:
-                    action: toggle
             columns: 1
+          - type: custom:bubble-card
+            card_type: button
+            button_type: switch
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            sub_button:
+              - name: Plafonnier
+                show_name: true
+                icon: mdi:ceiling-light
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+                entity: light.plafonnier_lina
+              - entity: light.lit_lina
+                name: Lit
+                show_name: true
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - entity: light.lampe_de_chevet_lina
+                show_name: true
+                name: Chevet
+                icon: mdi:floor-lamp
+                tap_action:
+                  action: toggle
+                double_tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+            name: Tout
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            entity: light.chambre_de_lina
+            icon: mdi:power
+            button_action:
+              tap_action:
+                action: more-info
+              hold_action:
+                action: toggle
+          - type: custom:bubble-card
+            card_type: media-player
+            entity: media_player.hub_lina
+            show_icon: true
+            show_name: true
+            scrolling_effect: true
+            hide:
+              play_pause_button: false
+            tap_action:
+              action: toggle
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            cover_background: true
+            card_layout: large
           - square: false
             type: grid
             cards:
               - type: tile
                 entity: sensor.chambre_lina_entree_batterie
                 name: Entrée
+                features_position: bottom
+                vertical: false
               - type: tile
                 entity: sensor.chevet_lina_batterie
                 name: Chevet
@@ -4054,6 +4488,8 @@ sections:
               - type: tile
                 entity: sensor.temperature_lina_linkquality
                 name: Capteur
+                features_position: bottom
+                vertical: false
               - type: tile
                 entity: sensor.temperature_lina_last_seen
                 name: Capteur
@@ -4134,6 +4570,16 @@ sections:
                 cards:
                   - type: custom:bubble-card
                     card_type: button
+                    entity: light.on_off_light_plafonnier_manel
+                    name: Plafonnier
+                    show_state: true
+                    icon: mdi:light-recessed
+                    show_last_changed: false
+                    tap_action:
+                      action: toggle
+                    card_layout: large
+                  - type: custom:bubble-card
+                    card_type: button
                     entity: light.prise_chevet_manel
                     name: Chevet
                     show_state: true
@@ -4142,20 +4588,35 @@ sections:
                     tap_action:
                       action: toggle
                     card_layout: large
-                  - type: tile
-                    name: Capteur
-                    entity: sensor.temperature_manel_battery
                 columns: 2
             columns: 1
           - square: false
             type: grid
             cards:
               - type: tile
+                name: Entrée
+                entity: sensor.chambre_manel_entree_batterie
+                features_position: bottom
+                vertical: false
+              - type: tile
+                name: Capteur
+                entity: sensor.temperature_manel_battery
+                features_position: bottom
+                vertical: false
+            columns: 2
+          - square: false
+            type: grid
+            cards:
+              - type: tile
                 name: Capteur
                 entity: sensor.temperature_manel_linkquality
+                features_position: bottom
+                vertical: false
               - type: tile
                 name: Capteur
                 entity: sensor.temperature_manel_last_seen
+                features_position: bottom
+                vertical: false
             columns: 2
           - square: false
             type: grid
@@ -4173,7 +4634,7 @@ sections:
             columns: 2
           - type: custom:webrtc-camera
             url: >-
-              rtsp://
+              rtsp:<personal_access_token>
             mode: webrtc,webrtc/tcp,mse,hls,mjpeg
             media: video,audio
             muted: true
@@ -4205,7 +4666,7 @@ sections:
             card_layout: normal
           - type: custom:webrtc-camera
             url: >-
-              rtsp://
+              rtsp://<personal_access_token>
             mode: webrtc,webrtc/tcp,mse,hls,mjpeg
             media: video,audio
             muted: true
@@ -4215,6 +4676,354 @@ sections:
               service: switch.toggle
               service_data:
                 entity_id: switch.camera_record
+  - type: grid
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: phu:rooms-closet
+                icon_color: ''
+                primary: Cellier
+                secondary: ''
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#cellier'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.cellier
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.on_off_light_cellier
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-spot
+                      {% else %}
+                       mdi:lightbulb-spot-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding-top: 8px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
+                    }
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon: phu:rooms-garage
+                icon_color: ''
+                primary: Garage
+                secondary: ''
+                layout: horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: '#garage'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: toggle
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.garage
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.on_off_light_garage
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:lightbulb-spot
+                      {% else %}
+                       mdi:lightbulb-spot-off
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding-top: 8px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
+                    }
+        columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#cellier'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - type: heading
+            icon: ''
+            heading: 🗄️ Cellier
+            heading_style: title
+            badges: []
+          - type: custom:bubble-card
+            card_type: button
+            button_type: switch
+            entity: light.on_off_light_cellier
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button: []
+            name: Spots
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+            button_action:
+              tap_action:
+                action: more-info
+              double_tap_action:
+                action: more-info
+          - square: false
+            type: grid
+            cards:
+              - type: tile
+                name: Prise cumulus
+                entity: switch.prise_cumulus
+                features_position: bottom
+                vertical: false
+              - type: tile
+                entity: sensor.prise_cumulus_linkquality
+                name: Prise cumulus
+                features_position: bottom
+                vertical: false
+            columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#garage'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - type: heading
+            icon: ''
+            heading: 🛠️ Garage
+            heading_style: title
+            badges: []
+          - type: custom:bubble-card
+            card_type: button
+            button_type: switch
+            entity: light.on_off_light_garage
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button: []
+            name: Spots
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+            button_action:
+              tap_action:
+                action: more-info
+              double_tap_action:
+                action: more-info
+      - square: false
+        type: grid
+        cards:
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-template-card
+                icon_color: ''
+                primary: Jardin
+                secondary: ''
+                tap_action:
+                  action: navigate
+                  navigation_path: '#jardin'
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                badge_icon: |-
+                  {% if is_state(entity, 'on') %} 
+                    mdi:lightbulb-alert
+                  {% endif %}
+                badge_color: |-
+                  {% if is_state(entity, 'on') %} 
+                    red
+                  {% endif %}
+                entity: light.jardin
+                icon: mdi:flower
+                features_position: bottom
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: template
+                    entity: light.switch_jardin
+                    icon: |-
+                      {% if is_state(entity, 'on') %} 
+                       mdi:light-flood-down
+                      {% else %}
+                       mdi:light-flood-down
+                      {% endif %}
+                    icon_color: |-
+                      {% if is_state(entity, 'on') %} 
+                       orange
+                      {% else %}
+                       grey
+                      {% endif %}
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: more-info
+                alignment: end
+                card_mod:
+                  style: |
+                    ha-card {
+                      padding-top: 8px;
+                      margin-top: -8px;
+                      padding-bottom: 8px;
+                      padding-left: 3px;
+                      padding-right: 8px;
+                    }
+        columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:bubble-card
+            card_type: pop-up
+            hash: '#jardin'
+            show_header: false
+            name: ''
+            show_state: true
+            show_name: false
+            force_icon: false
+            margin: 0px
+            width_desktop: 540px
+            show_last_changed: true
+            show_attribute: false
+            button_action:
+              tap_action:
+                action: more-info
+                navigation_path: '#robert-graph'
+            hide_backdrop: true
+            card_layout: normal
+          - type: heading
+            icon: ''
+            heading: 🌳 Jardin
+            heading_style: title
+            badges: []
+          - type: custom:bubble-card
+            card_type: button
+            button_type: switch
+            tap_action:
+              action: toggle
+            show_icon: true
+            scrolling_effect: true
+            show_state: true
+            show_attribute: true
+            attribute: brightness
+            sub_button: []
+            name: Phare Terasse
+            double_tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            show_last_changed: false
+            slider_live_update: false
+            show_name: true
+            card_layout: large
+            icon: mdi:power
+            button_action:
+              tap_action:
+                action: more-info
+              double_tap_action:
+                action: more-info
+            entity: light.switch_jardin
   - type: grid
     cards:
       - type: custom:mushroom-vacuum-card
@@ -4234,9 +5043,31 @@ sections:
         grid_options:
           columns: full
         layout: horizontal
+  - type: grid
+    cards:
+      - type: custom:navbar-card
+        template: main_nav_bar
+        media_player:
+          entity: media_player.cuisine
+          album_cover_background: true
+        haptic:
+          url: true
+          tap_action: true
+          hold_action: true
+          double_tap_action: true
+        layout:
+          auto_padding:
+            enabled: true
+            mobile_px: null
+        styles: |2-
+           .navbar-card {
+              width: 95%;
+              border-radius: 10px;
+            }
 badges: []
 type: sections
 max_columns: 1
-theme: Mushroom
 cards: []
 icon: mdi:home
+subview: true
+path: home

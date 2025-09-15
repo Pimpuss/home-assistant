@@ -1,0 +1,28 @@
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    card_type: pop-up
+    hash: '#meteo'
+    show_header: false
+    name: ''
+    show_state: true
+    show_name: false
+    force_icon: false
+    margin: 7px
+    width_desktop: 540px
+  - type: custom:meteofrance-weather-card
+    entity: weather.bauvin
+    name: Bauvin
+    hourly_forecast: true
+    rainChanceEntity: sensor.monthyon_rain_chance
+    uvEntity: sensor.monthyon_uv
+    cloudCoverEntity: sensor.monthyon_cloud_cover
+    freezeChanceEntity: sensor.monthyon_freeze_chance
+    snowChanceEntity: sensor.monthyon_snow_chance
+    rainForecastEntity: sensor.monthyon_next_rain
+    alertEntity: sensor.77_weather_alert
+    detailEntity: sensor.monthyon_rain_chance
+    wind_forecast_icons: false
+    humidity_forecast: true
+    details: true
+    one_hour_forecast: true

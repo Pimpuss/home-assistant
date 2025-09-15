@@ -1,0 +1,223 @@
+type: sections
+max_columns: 1
+icon: mdi:battery
+path: batteries
+sections:
+  - type: grid
+    cards:
+      - type: custom:bubble-card
+        card_type: separator
+        name: 📍 Entrée
+        sub_button: []
+        card_layout: normal
+        card_mod:
+          style: |
+            .bubble-separator.separator-container {
+              margin-top: 20px;
+            }
+      - square: false
+        type: grid
+        cards:
+          - type: tile
+            entity: sensor.porte_d_entree_batterie
+            name: Porte entrée 💡
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.hue_tap_dial_hall_d_entree_batterie
+            name: Tap Dial Hall 💡
+            features_position: bottom
+            vertical: false
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: tile
+            entity: sensor.toilettes_batterie
+            name: Toilettes 💡
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.hall_d_entree_dressing_batterie
+            features_position: bottom
+            vertical: false
+            name: Dressing 💡
+            card_mod:
+              style: |
+                .primary {
+                  font-size : 10px !important
+                }
+          - type: tile
+            entity: sensor.hue_dimmer_switch_7_batterie
+            name: Cellier entrée 💡
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.hue_dimmer_switch_6_batterie
+            name: Cellier 💡
+            features_position: bottom
+            vertical: false
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: tile
+            entity: sensor.hue_dimmer_switch_bureau_pimpus_batterie
+            name: Bureau 💡
+            features_position: bottom
+            vertical: false
+        columns: 2
+  - type: grid
+    cards:
+      - type: custom:bubble-card
+        card_type: separator
+        name: 📍 RDC
+        sub_button: []
+        card_layout: normal
+        card_mod:
+          style: |
+            .bubble-separator.separator-container {
+              margin-top: 20px;
+            }
+      - square: false
+        type: grid
+        cards:
+          - type: tile
+            entity: sensor.salon_entree_batterie
+            name: Salon💡
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.cuisine_entee_salle_a_manger_batterie
+            name: Cuisine 1💡
+            features_position: bottom
+            vertical: false
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: tile
+            entity: sensor.cuisine_entree_salon_batterie
+            features_position: bottom
+            vertical: false
+            name: Cuisine💡
+          - type: tile
+            entity: sensor.temperature_cuisine_battery
+            name: Cuisine🌡️
+            features_position: bottom
+            vertical: false
+            hide_state: false
+          - type: tile
+            entity: sensor.salle_de_bain_adultes_batterie
+            name: SDB enfants 💡
+            features_position: bottom
+            vertical: false
+            hide_state: false
+          - type: tile
+            entity: sensor.temperature_sdb_enfants_battery
+            name: SDB enfants 🌡️
+            features_position: bottom
+            vertical: false
+            hide_state: false
+        columns: 2
+  - type: grid
+    cards:
+      - type: custom:bubble-card
+        card_type: separator
+        name: 📍 Étage
+        sub_button: []
+        card_layout: normal
+        card_mod:
+          style: |
+            .bubble-separator.separator-container {
+              margin-top: 20px;
+            }
+      - square: false
+        type: grid
+        cards:
+          - type: tile
+            entity: sensor.hue_tap_dial_palier_etage_batterie
+            name: Tap dial étage 💡
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.chambre_lina_entree_batterie
+            name: Lina entrée 💡
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.chevet_lina_batterie
+            features_position: bottom
+            vertical: false
+            name: Lina chevet 💡
+          - type: tile
+            entity: sensor.temperature_lina_battery
+            name: Lina 🌡️
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.chambre_manel_entree_batterie
+            name: Manel entrée 💡
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.temperature_manel_battery
+            name: Manel 🌡️
+            features_position: bottom
+            vertical: false
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: tile
+            entity: sensor.chambre_adulte_entee_batterie
+            name: Adultes entrée 💡
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.chambre_adulte_lit_batterie
+            features_position: bottom
+            vertical: false
+            name: Adultes lit 💡
+        columns: 2
+      - square: false
+        type: grid
+        cards:
+          - type: tile
+            entity: sensor.salle_de_bain_adultes_batterie
+            name: SDB adultes 💡
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.temperature_adulte_battery
+            features_position: bottom
+            vertical: false
+            name: Adultes 🌡️
+        columns: 2
+      - square: false
+        type: grid
+        cards: []
+        columns: 3
+  - type: grid
+    cards:
+      - type: custom:navbar-card
+        template: main_nav_bar
+        media_player:
+          entity: media_player.cuisine
+          album_cover_background: true
+        haptic:
+          url: true
+          tap_action: true
+          hold_action: true
+          double_tap_action: true
+        layout:
+          auto_padding:
+            enabled: true
+            mobile_px: null
+        styles: |2-
+           .navbar-card {
+              width: 95%;
+              border-radius: 10px;
+            }
+subview: true
+cards: []

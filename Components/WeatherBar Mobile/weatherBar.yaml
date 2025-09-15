@@ -1,0 +1,101 @@
+square: false
+type: grid
+cards:
+  - type: custom:bubble-card
+    card_type: button
+    button_type: state
+    entity: weather.bauvin
+    tap_action:
+      action: navigate
+      navigation_path: '#meteo'
+    show_icon: true
+    scrolling_effect: true
+    show_state: true
+    show_attribute: true
+    sub_button:
+      - entity: sensor.temperature_cuisine_temperature
+        icon: mdi:home
+        show_state: true
+        name: Température maison
+      - entity: sensor.bauvin_humidity
+        show_background: true
+        show_name: false
+        show_last_changed: false
+        show_attribute: false
+        show_icon: true
+        show_state: true
+        name: Humidité
+        state_background: false
+      - entity: weather.bauvin
+        state_background: false
+        show_state: false
+        show_attribute: true
+        attribute: temperature
+        show_background: true
+        show_icon: true
+        icon: mdi:thermometer
+        name: Température Générale
+        show_last_changed: false
+      - entity: sensor.bauvin_freeze_chance
+        state_background: false
+        show_background: true
+        show_state: true
+        show_name: false
+        name: Risque Gel
+        icon: mdi:snowflake-thermometer
+      - entity: sensor.bauvin_cloud_cover
+        show_state: true
+        show_icon: true
+        state_background: false
+        show_name: false
+        show_background: true
+        show_last_changed: false
+        name: Etat Nuage
+      - entity: sensor.bauvin_wind_speed
+        show_state: true
+        show_icon: true
+        state_background: false
+        show_name: false
+        show_background: true
+        show_last_changed: false
+        name: Vitesse du vent
+        icon: mdi:weather-dust
+    name: ''
+    double_tap_action:
+      action: more-info
+    hold_action:
+      action: more-info
+    show_last_changed: false
+    slider_live_update: true
+    show_name: true
+    card_layout: large-2-rows
+    icon: ''
+    force_icon: true
+    styles: |-
+      .bubble-button-card-container {
+        border-radius: 20px !important;
+        margin-top: 20px
+      }
+
+      .bubble-icon {
+        opacity: 1;
+        color: white !important;
+      }
+
+      .bubble-icon ha-icon {
+        display: none;
+      }
+
+      .bubble-icon {
+        width: 50px;  /* Ajuste la taille selon tes besoins */
+        height: 50px; /* Ajuste la taille selon tes besoins */
+        background: ${state === 'rainy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/rainy-5.svg')" : state === 'cloudy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/cloudy.svg')" : state === 'clear' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/day.svg')" : state === 'clear-night' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/night.svg')" : state === 'fog' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/fog.svg')" : state === 'hail' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/rainy-7.svg')" : state === 'lightning' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/thunder.svg')" : state === 'lightning-rainy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/lightning-rainy.svg')" : state === 'partlycloudy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/cloudy-day-3.svg')" : state === 'pouring' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/rainy-6.svg')" : state === 'snowy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/snowy-6.svg')" : state === 'snowy-rainy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/snowy-rainy.svg')" : state === 'sunny' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/day.svg')" : state === 'windy' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/windy.svg')" : state === 'windy-variant' ? "url('/local/community/lovelace-meteofrance-weather-card/icons/windy.svg')" : state === 'exceptionnal' ? "red" : '' } no-repeat center center;
+        background-size: contain;
+      }
+
+      ${icon.setAttribute("icon", "")}
+    button_action:
+      tap_action:
+        action: navigate
+        navigation_path: '#meteo'
+columns: 1
